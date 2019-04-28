@@ -33,7 +33,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
   <!-- interface-description The main toplevel GUI widget of Aaa -->
   <!-- interface-copyright 2019 Yuan (Yvonne) Zhang, Minyong (Bill) Li -->
   <!-- interface-authors Minyong (Bill) Li <l630003027@mail.uic.edu.hk> -->
-  <template class="AaaGuiMain" parent="GtkApplicationWindow">
+  <template class="AaaWinMain" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
     <property name="default_width">800</property>
     <property name="default_height">600</property>
