@@ -14,6 +14,13 @@ make
 
 The result binary will be in the current directory. Shadow build is not supported.
 
+## Dependencies
+
+- GTK 3
+- GLib, GIO
+- JSON-GLib
+- libsodium
+
 ## Disclaimer
 
 This is a course project, far from finished, for reference only. Do not:
