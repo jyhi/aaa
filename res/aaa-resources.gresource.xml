@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <gresources>
   <gresource prefix="/hk/edu/uic/aaa">
-    <file compressed="true" preprocess="xml-stripblanks">ui/aaa.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/aaa-winmain.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/aaa-addcontanct.ui</file>
   </gresource>
 </gresources>
