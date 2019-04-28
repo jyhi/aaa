@@ -33,7 +33,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
   <!-- interface-description Dialog used in AAA for user addition in contact -->
   <!-- interface-copyright 2019 Yuan (Yvonne) Zhang, Minyong (Bill) Li -->
   <!-- interface-authors Minyong (Bill) Li <l630003027@mail.uic.edu.hk> -->
-  <object class="GtkDialog" id="AaaDlgAddContact">
+  <template class="AaaDlgAddContact" parent="GtkDialog">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Add Contact</property>
     <property name="type_hint">dialog</property>
@@ -140,5 +140,5 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
         </child>
       </object>
     </child>
-  </object>
+  </template>
 </interface>
