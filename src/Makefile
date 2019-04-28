@@ -31,7 +31,7 @@ VALACFLAGS += --gresources $(GRESOURCES)
 all: lib.a
 
 clean:
-	$(RM) $(RMFLAGS) lib.a $(OBJS) $(OBJS:.o=.c)
+	$(RM) $(RMFLAGS) lib.a $(OBJS) $(VALASRCS)
 
 valagen:
 	$(VALAC) $(VALACFLAGS) -C $(VALASRCS:.c=.vala)
