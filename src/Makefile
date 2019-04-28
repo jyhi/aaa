@@ -26,18 +26,20 @@ VALACFLAGS += $(foreach pkg,$(PKGS),--pkg $(pkg))
 GRESOURCES = ../res/aaa-resources.gresource.xml
 VALACFLAGS += --gresources $(GRESOURCES)
 
-.PHONY: all clean
+.PHONY: all clean valagen
 
 all: lib.a
 
 clean:
 	$(RM) $(RMFLAGS) lib.a $(OBJS) $(OBJS:.o=.c)
 
+valagen:
+	$(VALAC) $(VALACFLAGS) -C $(VALASRCS:.c=.vala)
+
+$(VALASRCS): valagen
+
 lib.a: $(OBJS)
 	$(AR) $(ARFLAGS) lib.a $^
-
-$(VALASRCS): $(VALASRCS:.c=.vala)
-	$(VALAC) $(VALACFLAGS) -C $^
 
 %.o: %.c
 	$(CC) $(CPPFLAGS) $(CFLAGS) -c -o $@ $<
