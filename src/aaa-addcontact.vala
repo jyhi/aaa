@@ -13,5 +13,14 @@ namespace Aaa {
     private Button btn_connect;
 
     public DlgAddContact() {}
+
+    public void set_status(string? status) {
+      if (status != null) {
+        this.lbl_status.set_visible(true);
+        this.lbl_status.set_text(status);
+      } else {
+        this.lbl_status.set_visible(false);
+      }
+    }
   }
 }
