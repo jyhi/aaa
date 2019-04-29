@@ -11,16 +11,17 @@ An aaa packet consists of 3 parts:
 3. `Signature` is the cryptographic signature signed upon `Message` by the sender
 
 ```
-[Header]![Message],[Signature].
+[Header]![Message];[Nonce],[Authentication].
 ```
 
 In which,
 
 1. `Header` is `AAA`
 2. `Message` is `Base64(Encrypt(Json(...)))`
-3. `Signature` is `Base64(Sign(Message))`
+3. `Nonce` is `Base64(RandomSequence())`
+4. `Signature` is either `Base64(Sign(Message))` or `Base64(MAC(Message))`, depending on types of message
 
-`Header` and `Message` are divided with an exclamation mark (`!`), `Message` and `Signature` are divided with a comma (`,`). The whole message ends with a period (`.`). The serialized packet is an ASCII string.
+`Header` and `Message` are divided with an exclamation mark (`!`), `Message` and `Nonce` are divided with a semicolon (`;`), and `Nonce` and `Signature` are divided with a comma (`,`). The whole message ends with a period (`.`). The serialized packet is an ASCII string.
 
 ### Header
 
@@ -30,7 +31,7 @@ Header acts as a magic number of an aaa packet:
 AAA!
 ```
 
-Every packet sent by aaa is prefixed with this header.
+Every packet sent by aaa is prefixed with this header. If a client receives a packet that does not start with `AAA!`, the client should drop it and close connection with the sender (if applicable).
 
 ### Message
 
@@ -38,11 +39,26 @@ Message field contains messages sending from a sender to a receiver.
 
 The message is encoded in base64. Content of the message is either encrypted with the receipent's public key, or unencrypted, depending on types of the message (see below on message types).
 
+### Nonce
+
+Nonce field contains a random sequence of bytes, used in combination with decryption of the message field.
+
+For packets that does not have encryption on message field (e.g. hello packet), this field should be empty (that is, becoming `;,`).
+
 ### Signature
 
-Signature field contains cryptographic signature to the encrypted message with the sender's private key.
+Signature field contains **_Ed25519_ signature** to the non-encrypted message with the sender's private key, and **Poly1305 MAC** to the encrypted message for _authenticated encryption_.
 
 Every aaa packet comes with a vaild signature from the sender. The signature is made upon the message field: if the message is encrypted, then the signature is made upon the encrypted content; otherwise it is made upon the plaintext message.
+
+## Cipher
+
+- Signature: **Ed25519**
+- Encryption: **Curve25519**, derived from the corresponding _Ed25519_ key
+
+It is advised to use [libsodium][] to perform _authenticated encryption_ and _public-key signing_.
+
+[libsodium]: https://libsodium.org/
 
 ## Types of AAA Packets
 
@@ -66,7 +82,7 @@ A hello packet initiates a chat from one client to the other, with public key ex
 
 - `"type"`: String value `hello`, indicating type of the message.
 - `"id"`: String value, containing identity of the sender.
-- `"cert"`: String value, containing the certificate of sender. The value is base64-encoded.
+- `"cert"`: String value, containing the _Ed25519_ certificate of sender. The value is base64-encoded.
 
 A hello packet is generally **NOT encrypted**, since there is no knowledge on the receiver's certificate (public key) in prior. The signature is made directly upon the JSON string.
 
