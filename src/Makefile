@@ -14,13 +14,14 @@ OBJS = aaa-addcontact.o \
 	main.o
 
 # Packages (dependencies) used in the project
-PKGS = gtk+-3.0
+PKGS = gtk+-3.0 json-glib-1.0 libsodium
 
 # Insert dependency flags
 CFLAGS += $(shell pkg-config --cflags $(PKGS))
 
 # Same for vala
-VALACFLAGS += $(foreach pkg,$(PKGS),--pkg $(pkg))
+# NOTE: Excluding libsodium
+VALACFLAGS += $(foreach pkg,$(filter-out libsodium, $(PKGS)),--pkg $(pkg))
 
 # XXX: Tell Vala about GResource
 GRESOURCES = ../res/aaa-resources.gresource.xml
