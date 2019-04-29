@@ -36,6 +36,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
   <template class="AaaDlgAddContact" parent="GtkDialog">
     <property name="can_focus">False</property>
     <property name="title" translatable="yes">Add Contact</property>
+    <property name="modal">True</property>
     <property name="type_hint">dialog</property>
     <child>
       <placeholder/>
@@ -140,5 +141,9 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
         </child>
       </object>
     </child>
+    <action-widgets>
+      <action-widget response="-6">btn_cancel</action-widget>
+      <action-widget response="-5">btn_connect</action-widget>
+    </action-widgets>
   </template>
 </interface>
