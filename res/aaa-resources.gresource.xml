@@ -3,5 +3,6 @@
   <gresource prefix="/hk/edu/uic/aaa">
     <file compressed="true" preprocess="xml-stripblanks">ui/aaa-winmain.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/aaa-addcontact.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/aaa-contactrow.ui</file>
   </gresource>
 </gresources>

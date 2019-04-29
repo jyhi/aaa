@@ -4,12 +4,14 @@ VALAC = valac
 # List of C source code files to generate from Vala code
 VALASRCS = aaa-addcontact.c \
 	aaa-winmain.c \
+	aaa-contactrow.c \
 	app.c \
 	main.c
 
 # Object files
 OBJS = aaa-addcontact.o \
 	aaa-winmain.o \
+	aaa-contactrow.o \
 	app.o \
 	main.o
 
