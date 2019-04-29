@@ -2,6 +2,8 @@
 
 "Aaa" is an end-to-end encrypted peer-to-peer instant messaging software.
 
+**_Proudly Powered by Curve25519_**
+
 ## Why "Aaa"?
 
 This is an idea from Yvonne, which has no actual meaning.
