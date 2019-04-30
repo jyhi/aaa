@@ -69,6 +69,18 @@ namespace Aaa {
 
     [GtkCallback]
     private void btn_send_clicked_cb() {
+      var buffer = this.textview_tosend.get_buffer();
+
+      // We want the whole message so get an start iter and an end iter
+      TextIter start, end;
+      buffer.get_start_iter(out start);
+      buffer.get_end_iter(out end);
+
+      var text = buffer.get_text(start, end, false);
+
+      // Clear the text view
+      buffer.delete(ref start, ref end);
+
       // Send message
       // unimpl
     }
