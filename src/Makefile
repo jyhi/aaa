@@ -5,6 +5,7 @@ VALAC = valac
 VALASRCS = aaa-addcontact.c \
 	aaa-winmain.c \
 	aaa-contactrow.c \
+	aaa-peerinfo.c \
 	app.c \
 	main.c
 
@@ -12,6 +13,7 @@ VALASRCS = aaa-addcontact.c \
 OBJS = aaa-addcontact.o \
 	aaa-winmain.o \
 	aaa-contactrow.o \
+	aaa-peerinfo.o \
 	app.o \
 	main.o
 

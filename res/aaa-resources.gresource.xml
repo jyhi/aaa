@@ -4,5 +4,6 @@
     <file compressed="true" preprocess="xml-stripblanks">ui/aaa-winmain.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/aaa-addcontact.ui</file>
     <file compressed="true" preprocess="xml-stripblanks">ui/aaa-contactrow.ui</file>
+    <file compressed="true" preprocess="xml-stripblanks">ui/aaa-peerinfo.ui</file>
   </gresource>
 </gresources>
