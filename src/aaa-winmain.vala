@@ -42,5 +42,14 @@ namespace Aaa {
 
       dlg_add_contact.destroy();
     }
+
+    [GtkCallback]
+    private void btn_user_del_clicked_cb() {
+      // Remove the selected row
+      var selected_row = this.listbox_users.get_selected_row();
+      if (selected_row != null) {
+        selected_row.destroy();
+      }
+    }
   }
 }
