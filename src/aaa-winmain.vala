@@ -19,5 +19,28 @@ namespace Aaa {
     private TextView textview_tosend;
 
     public WinMain() {}
+
+    [GtkCallback]
+    private void btn_user_add_clicked_cb() {
+      var dlg_add_contact = new DlgAddContact();
+      int ret = dlg_add_contact.run();
+
+      switch (ret) {
+        case ResponseType.OK:
+          dlg_add_contact.set_status("Connecting...");
+
+          // Try connecting the peer
+          // Get peer ID
+          // Insert an online user in contact list
+          // unimpl
+
+          break;
+        case ResponseType.CANCEL: // fall through
+        default:
+          break;
+      }
+
+      dlg_add_contact.destroy();
+    }
   }
 }
