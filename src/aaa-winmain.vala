@@ -56,9 +56,11 @@ namespace Aaa {
     private void listbox_users_row_selected_cb(ListBoxRow? row) {
       if (row == null) {
         // Switch to the welcome page
+        this.headerbar_main.set_title("Welcome");
         this.stack_main.set_visible_child_name("stackpage_welcome");
       } else {
         // Fill chat history
+        // Show peer id as main title
         // Switch to the chat page
         // unimpl
         this.stack_main.set_visible_child_name("stackpage_messaging");

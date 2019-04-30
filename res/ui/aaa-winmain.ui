@@ -41,6 +41,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
       <object class="GtkHeaderBar" id="headerbar_main">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="title" translatable="yes">Welcome</property>
         <property name="subtitle" translatable="yes">AAA</property>
         <property name="show_close_button">True</property>
       </object>
