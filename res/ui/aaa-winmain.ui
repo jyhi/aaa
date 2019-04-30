@@ -81,6 +81,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
               <object class="GtkListBox" id="listbox_users">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <signal name="row-selected" handler="listbox_users_row_selected_cb" swapped="no"/>
               </object>
               <packing>
                 <property name="expand">True</property>
@@ -156,7 +157,9 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
                 <child>
                   <object class="GtkImage">
                     <property name="visible">True</property>
-                    <property name="can_focus">False</property>
+                    <property name="can_focus">True</property>
+                    <property name="has_focus">True</property>
+                    <property name="is_focus">True</property>
                     <property name="pixel_size">128</property>
                     <property name="icon_name">instant-messenger</property>
                     <property name="icon_size">0</property>

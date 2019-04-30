@@ -51,5 +51,18 @@ namespace Aaa {
         selected_row.destroy();
       }
     }
+
+    [GtkCallback]
+    private void listbox_users_row_selected_cb(ListBoxRow? row) {
+      if (row == null) {
+        // Switch to the welcome page
+        this.stack_main.set_visible_child_name("stackpage_welcome");
+      } else {
+        // Fill chat history
+        // Switch to the chat page
+        // unimpl
+        this.stack_main.set_visible_child_name("stackpage_messaging");
+      }
+    }
   }
 }
