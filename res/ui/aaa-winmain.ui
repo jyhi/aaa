@@ -233,6 +233,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
                             <property name="can_focus">True</property>
                             <property name="receives_default">True</property>
                             <property name="use_underline">True</property>
+                            <signal name="clicked" handler="btn_send_clicked_cb" swapped="no"/>
                           </object>
                           <packing>
                             <property name="expand">True</property>

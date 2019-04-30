@@ -64,5 +64,11 @@ namespace Aaa {
         this.stack_main.set_visible_child_name("stackpage_messaging");
       }
     }
+
+    [GtkCallback]
+    private void btn_send_clicked_cb() {
+      // Send message
+      // unimpl
+    }
   }
 }
