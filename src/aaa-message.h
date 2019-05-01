@@ -15,7 +15,7 @@ enum AaaMessageType {
  */
 struct AaaMessage {
   enum AaaMessageType type; ///< Type of the message.
-  char *id;                 ///< Remote user ID.
+  char *id;                 ///< Identity of the sender.
   union {
     char *message;          ///< Message sent from user, used in AAA_MESSAGE_TYPE_MSG.
     char *cert;             ///< Certificate from user, used in AAA_MESSAGE_TYPE_HELLO.
