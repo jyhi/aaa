@@ -36,7 +36,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
   <template class="AaaWinMain" parent="GtkApplicationWindow">
     <property name="can_focus">False</property>
     <property name="default_width">800</property>
-    <property name="default_height">600</property>
+    <property name="default_height">500</property>
     <child type="titlebar">
       <object class="GtkHeaderBar" id="headerbar_main">
         <property name="visible">True</property>
