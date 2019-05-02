@@ -31,7 +31,7 @@ namespace Aaa {
     }
 
     public void push_message(string id, string msg) {
-      //
+      this.box_messages.add(new MsgRow(id, msg));
     }
 
     [GtkCallback]
