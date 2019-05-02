@@ -3,6 +3,7 @@ namespace Aaa {
     private SocketConnection conn;
     private bool close_before_return;
     private ChatUI view;
+    private string id;
 
     public Daemon(SocketConnection conn, bool close_before_return, ChatUI view) {
       this.conn = conn;
@@ -16,6 +17,10 @@ namespace Aaa {
 
     public uint16 get_remote_port() {
       return (this.conn.get_remote_address() as InetSocketAddress).get_port();
+    }
+
+    public string get_remote_id() {
+      return this.id;
     }
 
     public string receive() throws IOError {
