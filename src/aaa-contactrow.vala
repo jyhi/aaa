@@ -29,5 +29,13 @@ namespace Aaa {
       this.id.set_text(id);
       this.addr.set_text(addr);
     }
+
+    public string get_id() {
+      return this.id.get_text();
+    }
+
+    public string get_addr() {
+      return this.addr.get_text();
+    }
   }
 }
