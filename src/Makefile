@@ -9,6 +9,7 @@ VALASRCS = aaa-addcontact.c \
 	aaa-chatui.c \
 	aaa-daemon.c \
 	aaa-socketservice.c \
+	aaa-msgrow.c \
 	app.c \
 	main.c
 
@@ -20,6 +21,7 @@ OBJS = aaa-addcontact.o \
 	aaa-chatui.o \
 	aaa-daemon.o \
 	aaa-socketservice.o \
+	aaa-msgrow.o \
 	aaa-configmgr.o \
 	app.o \
 	main.o
