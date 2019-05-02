@@ -16,11 +16,11 @@ export RMFLAGS  = -f
 
 # Turn on all warnings
 # ... except clang, who yells at glib...
-ifeq ($(CC), clang)
-CFLAGS += -Weverything -Wno-documentation -Wno-documentation-pedantic -Wno-reserved-id-macro -Wno-used-but-marked-unused -Wno-padded
-else
-CFLAGS += -Wall -Wextra -Wpedantic
-endif
+# ifeq ($(CC), clang)
+# CFLAGS += -Weverything -Wno-documentation -Wno-documentation-pedantic -Wno-reserved-id-macro -Wno-used-but-marked-unused -Wno-padded
+# else
+# CFLAGS += -Wall -Wextra -Wpedantic
+# endif
 
 # Generate optimized code for release, otherwise for debug
 ifdef RELEASE
