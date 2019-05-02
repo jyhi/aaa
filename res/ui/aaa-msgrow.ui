@@ -33,7 +33,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
   <!-- interface-description A row representing a pice of message in AAA -->
   <!-- interface-copyright 2019 Yuan (Yvonne) Zhang, Minyong (Bill) Li -->
   <!-- interface-authors Minyong (Bill) Li <l630003027@mail.uic.edu.hk> -->
-  <template class="AaaBoxMsgRow" parent="GtkBox">
+  <template class="AaaMsgRow" parent="GtkBox">
     <property name="visible">True</property>
     <property name="can_focus">False</property>
     <child>
