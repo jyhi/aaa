@@ -79,6 +79,14 @@ namespace Aaa {
       }
     }
 
+    public void bye(bool wait_for_bye) throws Error {
+      if (wait_for_bye) {
+        // Send bye, then wait for a bye
+      } else {
+        // Send bye
+      }
+    }
+
     public int loop() {
       for (;;) {
         debug("daemon: waiting for events...");
