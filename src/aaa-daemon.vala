@@ -79,6 +79,10 @@ namespace Aaa {
       }
     }
 
+    public void disconnect() {
+      this.conn.close();
+    }
+
     public void bye(bool wait_for_bye) throws Error {
       if (wait_for_bye) {
         // Send bye, then wait for a bye
