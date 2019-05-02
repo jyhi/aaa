@@ -65,20 +65,20 @@ char *aaa_message_serialize(const struct AaaMessage * const Aaa_msg) {
 }
 
 struct AaaMessage *aaa_message_deserialize(const char * const message_str) {
-	struct AaaMessage messagePacket;
-
-	if (strncmp(message_str, "/hello", 6) == 0)
-	{
-		messagePacket.type = AAA_MESSAGE_TYPE_HELLO;
-		messagePacket.id = get_ip();
-		messagePacket.cert = /* Where can get the cert? */;
-	} else if (strncmp(message_str, "/bye", 4) == 0) {
-		messagePacket.type = AAA_MESSAGE_TYPE_BYE;
-	} else {
-		messagePacket.type = AAA_MESSAGE_TYPE_MSG;
-		messagePacket.message = message_str;
-	}
-	return &messagePacket;
+    struct AaaMessage *messagePacket = (struct AaaMessage *)malloc(sizeof(struct AaaMessage));
+    
+    if (strncmp(message_str, "/hello", 6) == 0)
+    {
+        messagePacket->type = AAA_MESSAGE_TYPE_HELLO;
+        messagePacket->id = "Cooper"/* Where can get the name of sender? */;
+        messagePacket->cert = "cert"/* Where can get the cert? */;
+    } else if (strncmp(message_str, "/bye", 4) == 0) {
+        messagePacket->type = AAA_MESSAGE_TYPE_BYE;
+    } else {
+        messagePacket->type = AAA_MESSAGE_TYPE_MSG;
+        messagePacket->message = message_str;
+    }
+    return messagePacket;
 }
 
 // for testing
