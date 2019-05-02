@@ -10,6 +10,14 @@ namespace Aaa {
       this.view = view;
     }
 
+    public string get_remote_ip() {
+      return (this.conn.get_remote_address() as InetSocketAddress).get_address().to_string();
+    }
+
+    public uint16 get_remote_port() {
+      return (this.conn.get_remote_address() as InetSocketAddress).get_port();
+    }
+
     public string receive() throws IOError {
       var buffer = new uint8[4096];
 
