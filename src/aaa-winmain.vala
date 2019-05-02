@@ -1,4 +1,5 @@
 using Gtk;
+using Gee;
 
 namespace Aaa {
   [GtkTemplate (ui = "/hk/edu/uic/aaa/ui/aaa-winmain.ui")]
@@ -19,8 +20,11 @@ namespace Aaa {
     private TextView textview_tosend;
 
     private SocketService socket_service;
+    private HashMap<string, Daemon> peers; // <id, daemon>
 
-    public WinMain() {}
+    public WinMain() {
+      this.peers = new HashMap<string, Daemon>();
+    }
 
     public SocketService get_socket_service() {
       return this.socket_service;
@@ -43,10 +47,31 @@ namespace Aaa {
         case ResponseType.OK:
           dlg_add_contact.set_status("Connecting...");
 
-          // Try connecting the peer
-          // Get peer ID
-          // Insert an online user in contact list
-          // unimpl
+          var daemon = this.socket_service.connect(dlg_add_contact.get_ip(), 1234); // XXX: Port
+          if (daemon == null) {
+            var dlg = new MessageDialog(dlg_add_contact,
+                              DialogFlags.DESTROY_WITH_PARENT | DialogFlags.MODAL,
+                              MessageType.ERROR,
+                              ButtonsType.OK,
+                              "Failed to connect to %s:%u", dlg_add_contact.get_ip(), 1234);
+            dlg.run();
+            break;
+          }
+
+          var remote_id = daemon.get_remote_id();
+          var remote_ip = daemon.get_remote_ip();
+
+          // Add a contact row
+          this.listbox_users.add(
+            new ContactRow(
+              ContactStatus.ONLINE,
+              remote_id,
+              remote_ip
+            )
+          );
+
+          // Add to hash map for future use
+          this.peers.set(remote_id, daemon);
 
           break;
         case ResponseType.CANCEL: // fall through
@@ -59,10 +84,27 @@ namespace Aaa {
 
     [GtkCallback]
     private void btn_user_del_clicked_cb() {
-      // Remove the selected row
       var selected_row = this.listbox_users.get_selected_row();
       if (selected_row != null) {
+        // Disconnect with peer first
+        var remote_id = (selected_row.get_child() as ContactRow).get_id();
+        var remote_ip = (selected_row.get_child() as ContactRow).get_addr();
+        var daemon = this.peers.get(remote_id);
+
+        if (daemon != null) {
+          debug("trying to disconnect from %s (%s)...", remote_id, remote_ip);
+          try {
+            daemon.bye(true); // Gracefully shut down the connection
+          } catch (Error e) {
+            message("failed to wave hand to the peer... let it go");
+            daemon.disconnect(); // Forcefully shut down the connection
+          }
+        }
+
+        // Remove the selected row
         selected_row.destroy();
+
+        message("connection to %s (%s) closed", remote_id, remote_ip);
       }
     }
 
@@ -95,8 +137,15 @@ namespace Aaa {
       // Clear the text view
       buffer.delete(ref start, ref end);
 
+      // Show message of current user on the window
+      this.box_messages.add(new MsgRow("You", text));
+
+      // Get current peer ID
+      var remote_id = (this.listbox_users.get_selected_row().get_child() as ContactRow).get_id();
+
       // Send message
-      // unimpl
+      var daemon = this.peers.get(remote_id);
+      daemon.send(text);
     }
   }
 }

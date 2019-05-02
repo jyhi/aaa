@@ -32,7 +32,7 @@ CFLAGS += -g
 endif
 
 # Packages (dependencies) used in link time
-PKGS = gtk+-3.0 gio-2.0 json-glib-1.0 libsodium
+PKGS = gtk+-3.0 gio-2.0 gee-0.8 json-glib-1.0 libsodium
 
 # Insert dependency flags
 LDFLAGS += $(shell pkg-config --libs $(PKGS))

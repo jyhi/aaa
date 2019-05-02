@@ -27,7 +27,7 @@ OBJS = aaa-addcontact.o \
 	main.o
 
 # Packages (dependencies) used in the project
-PKGS = gtk+-3.0 json-glib-1.0 libsodium
+PKGS = gtk+-3.0 gee-0.8 json-glib-1.0 libsodium
 
 # Insert dependency flags
 CFLAGS += $(shell pkg-config --cflags $(PKGS))

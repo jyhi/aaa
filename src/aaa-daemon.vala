@@ -92,10 +92,24 @@ namespace Aaa {
     }
 
     public int loop() {
+      string incoming;
+
       for (;;) {
-        debug("daemon: waiting for events...");
-        // Look for user action and socket event
-        // unimpl
+        try {
+          incoming = this.receive(); // Blocks
+        } catch (IOError e) {
+          warning("error during receive: %s", e.message);
+          return 0;
+        }
+
+        debug("new incoming message");
+
+        // unimpl:
+        // - Deserialize packet
+        // - Verify packet (msg / bye)
+        // - Deserialize message (msg / bye)
+        // - Update UI
+        this.view.push_message("alice", "Someone is knocking the door...");
       }
     }
   }
