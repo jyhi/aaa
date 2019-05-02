@@ -1,11 +1,10 @@
 #include <string.h>
 #include "aaa-packet.h"
 
-#define BUFSIZE 2048
-
 char *aaa_packet_serialize(const struct AaaPacket packet) {
-    char *res = (char *)malloc(sizeof(char) * BUFSIZE);
-
+    size_t packet_length = packet.message_length + packet.nonce_length + packet.signature_length;
+    char *res = (char *)malloc(sizeof(char) * (packet_length + 7));
+    
     // [Header]!
     strcpy(res, "AAA!");
     // [Message];
@@ -16,8 +15,8 @@ char *aaa_packet_serialize(const struct AaaPacket packet) {
     strcat(res, ",");
     // [Authentication].
     strcat(res, packet.signature);
-	strcat(res, ".");
-
+    strcat(res, ".");
+    
     return res;
 }
 
