@@ -5,11 +5,18 @@
 
 /**
  * Data structure representing an AAA packet.
+ *
+ * Note that all the `uint8_t *` fields may or may not contain a trailing NUL
+ * character, so it is important to have a correct corresponding _length size
+ * to tell the length of each field.
  */
 struct AaaPacket {
-  uint8_t *message;   ///< The message field.
-  uint8_t *nonce;     ///< The nonce field.
-  uint8_t *signature; ///< The signature field.
+  uint8_t *message;          ///< The message field.
+  size_t   message_length;   ///< Length of the message field.
+  uint8_t *nonce;            ///< The nonce field.
+  size_t   nonce_length;     ///< Length of the nonce field.
+  uint8_t *signature;        ///< The signature field.
+  size_t   signature_length; ///< Length of the signature field.
 };
 
 /**
