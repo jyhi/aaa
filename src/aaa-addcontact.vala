@@ -22,5 +22,9 @@ namespace Aaa {
         this.lbl_status.set_visible(false);
       }
     }
+
+    public string get_ip() {
+      return this.entry_remote.get_text();
+    }
   }
 }
