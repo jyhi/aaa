@@ -6,6 +6,7 @@ VALASRCS = aaa-addcontact.c \
 	aaa-winmain.c \
 	aaa-contactrow.c \
 	aaa-peerinfo.c \
+	aaa-chatui.c \
 	app.c \
 	main.c
 
@@ -14,6 +15,7 @@ OBJS = aaa-addcontact.o \
 	aaa-winmain.o \
 	aaa-contactrow.o \
 	aaa-peerinfo.o \
+	aaa-chatui.o \
 	aaa-configmgr.o \
 	app.o \
 	main.o
