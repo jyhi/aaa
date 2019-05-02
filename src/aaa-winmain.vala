@@ -14,7 +14,7 @@ namespace Aaa {
     [GtkChild]
     private Stack stack_main;
     [GtkChild]
-    private TextView textview_messages;
+    private Box box_messages;
     [GtkChild]
     private TextView textview_tosend;
 

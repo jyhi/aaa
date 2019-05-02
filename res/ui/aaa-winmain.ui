@@ -205,15 +205,15 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkTextView" id="textview_messages">
+                          <object class="GtkBox" id="box_messages">
                             <property name="visible">True</property>
-                            <property name="can_focus">True</property>
-                            <property name="editable">False</property>
-                            <property name="wrap_mode">word</property>
-                            <property name="left_margin">6</property>
-                            <property name="right_margin">6</property>
-                            <property name="top_margin">6</property>
-                            <property name="bottom_margin">6</property>
+                            <property name="can_focus">False</property>
+                            <property name="valign">end</property>
+                            <property name="border_width">6</property>
+                            <property name="orientation">vertical</property>
+                            <child>
+                              <placeholder/>
+                            </child>
                           </object>
                         </child>
                       </object>
