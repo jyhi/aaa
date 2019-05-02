@@ -14,6 +14,7 @@ OBJS = aaa-addcontact.o \
 	aaa-winmain.o \
 	aaa-contactrow.o \
 	aaa-peerinfo.o \
+	aaa-configmgr.o \
 	app.o \
 	main.o
 
