@@ -14,7 +14,6 @@ char *aaa_config_get_id(void);
  * Set user ID.
  *
  * @param id [in] ID to set.
- * @return 0 for failure, 1 for success.
  */
 void aaa_config_set_id(const char * const id);
 
@@ -32,7 +31,6 @@ uint8_t *aaa_config_get_cert(size_t *size);
  *
  * @param cert        [in] Certificate to set.
  * @param cert_length [in] Length of the certificate.
- * @return 0 for failure, 1 for success.
  */
 void aaa_config_set_cert(const uint8_t * const cert, const size_t cert_length);
 
