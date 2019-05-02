@@ -40,6 +40,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
       <object class="GtkLabel" id="id">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="valign">start</property>
         <property name="label" translatable="yes">alice</property>
         <attributes>
           <attribute name="weight" value="bold"/>
@@ -55,6 +56,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
       <object class="GtkLabel">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
+        <property name="valign">start</property>
         <property name="margin_left">3</property>
         <property name="margin_right">3</property>
         <property name="label" translatable="yes">:</property>
@@ -69,7 +71,10 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
       <object class="GtkLabel" id="msg">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
-        <property name="label" translatable="yes">Do you feel secure now?</property>
+        <property name="valign">start</property>
+        <property name="label" translatable="yes">Do you feel secure now? Do you feel secure now? Do you feel secure now? Do you feel secure now? Do you feel secure now? Do you feel secure now? Do you feel secure now? Do you feel secure now?</property>
+        <property name="wrap">True</property>
+        <property name="selectable">True</property>
       </object>
       <packing>
         <property name="expand">False</property>
