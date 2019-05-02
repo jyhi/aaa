@@ -1,67 +1,38 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <netdb.h>
-#include <ifaddrs.h>
 #include <string.h>
 #include "aaa-message.h"
 
-#define BUFSIZE 1024
-#define HELLO "Hello!"
-#define BYE "Bye-bye!"
-
-static char *get_ip() {
-	struct ifaddrs *ifaddr, *ifa;
-	int family, s;
-	char *host = NULL;
- 
-	if (getifaddrs(&ifaddr) == -1) {
-		perror("getifaddrs");
-		return NULL;
-	}
- 
-	for (ifa = ifaddr; ifa != NULL; ifa = ifa->ifa_next) {
-		if (ifa->ifa_addr == NULL)
-			continue;
- 
-		family = ifa->ifa_addr->sa_family;
- 
-		if (!strcmp(ifa->ifa_name, "lo"))
-			continue;
-		if (family == AF_INET) {
-			if ((host = malloc(NI_MAXHOST)) == NULL)
-				return NULL;
-			s = getnameinfo(ifa->ifa_addr,
-					(family == AF_INET) ? sizeof(struct sockaddr_in) :
-					sizeof(struct sockaddr_in6),
-					host, NI_MAXHOST, NULL, 0, NI_NUMERICHOST);
-			if (s != 0) {
-				return NULL;
-			}
-			freeifaddrs(ifaddr);
-			return host;
-		}
-	}
-	return NULL;
-}
+#define BUFSIZE 2048
 
 char *aaa_message_serialize(const struct AaaMessage * const Aaa_msg) {
-	if (!Aaa_msg) return NULL;
-
-	char *msg = (char *)malloc(sizeof(char) * BUFSIZE);
-	switch (Aaa_msg->type) {
-		case AAA_MESSAGE_TYPE_HELLO:
-			msg = HELLO;
-			break;
-		case AAA_MESSAGE_TYPE_MSG:
-			msg = Aaa_msg->message;
-			break;
-		case AAA_MESSAGE_TYPE_BYE:
-			msg = BYE;
-			break;
-		default:
-			return NULL;
-	}
-	return msg;
+    if (!Aaa_msg) return NULL;
+    
+    char *json_msg = (char *)malloc(sizeof(char) * BUFSIZE);
+    strcpy(json_msg, "{\n");
+    switch (Aaa_msg->type) {
+        case AAA_MESSAGE_TYPE_HELLO:
+            strcat(json_msg, "\t\"type\": \"hello\",\n");
+            strcat(json_msg, "\t\"id\": \"");
+            strcat(json_msg, Aaa_msg->id);
+            strcat(json_msg, "\",\n\t\"cert\": \"");
+            strcat(json_msg, Aaa_msg->cert);
+            strcat(json_msg, "\"\n");
+            break;
+        case AAA_MESSAGE_TYPE_MSG:
+            strcat(json_msg, "\t\"type\": \"msg\",\n");
+            strcat(json_msg, "\t\"msg\": \"");
+            strcat(json_msg, Aaa_msg->message);
+            strcat(json_msg, "\"\n");
+            break;
+        case AAA_MESSAGE_TYPE_BYE:
+            strcat(json_msg, "\t\"type\": \"bye\"\n");
+            break;
+        default:
+            return NULL;
+    }
+    strcat(json_msg, "}");
+    return json_msg;
 }
 
 struct AaaMessage *aaa_message_deserialize(const char * const message_str) {
@@ -70,8 +41,8 @@ struct AaaMessage *aaa_message_deserialize(const char * const message_str) {
     if (strncmp(message_str, "/hello", 6) == 0)
     {
         messagePacket->type = AAA_MESSAGE_TYPE_HELLO;
-        messagePacket->id = "Cooper"/* Where can get the name of sender? */;
-        messagePacket->cert = "cert"/* Where can get the cert? */;
+        messagePacket->id = "temp_id"; // Where can get the name of sender?
+        messagePacket->cert = "temp_cert"; // Where can get the cert?
     } else if (strncmp(message_str, "/bye", 4) == 0) {
         messagePacket->type = AAA_MESSAGE_TYPE_BYE;
     } else {
@@ -105,8 +76,8 @@ struct AaaMessage *aaa_message_deserialize(const char * const message_str) {
 // 	// -> msg
 // 	msg = "How's it going?";
 // 	struct AaaMessage *test_msg_des1 = aaa_message_deserialize(msg);
-// 	printf("%s\n",test_msg_des1->message);
-// 	printf("Type is: %u\n\n",test_msg_des1->type);
+//    	printf("Type is: %u\n",test_msg_des1->type);
+//    	printf("%s\n\n",test_msg_des1->message);
 	
 // 	// ->hello
 // 	msg = "/hello";
