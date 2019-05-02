@@ -2,7 +2,7 @@ using Gtk;
 
 namespace Aaa {
   [GtkTemplate (ui = "/hk/edu/uic/aaa/ui/aaa-winmain.ui")]
-  public class WinMain : ApplicationWindow {
+  public class WinMain : ApplicationWindow, ChatUI {
     [GtkChild]
     private HeaderBar headerbar_main;
     [GtkChild]
@@ -18,7 +18,21 @@ namespace Aaa {
     [GtkChild]
     private TextView textview_tosend;
 
+    private SocketService socket_service;
+
     public WinMain() {}
+
+    public SocketService get_socket_service() {
+      return this.socket_service;
+    }
+
+    public void set_socket_service(SocketService socket_service) {
+      this.socket_service = socket_service;
+    }
+
+    public void push_message(string id, string msg) {
+      //
+    }
 
     [GtkCallback]
     private void btn_user_add_clicked_cb() {
