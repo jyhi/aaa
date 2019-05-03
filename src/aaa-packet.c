@@ -4,35 +4,30 @@
 #include "aaa-packet.h"
 
 char *str_split(char *str, const char *delim) {
-    static char* left = NULL;
-    if(str == NULL) str = left;
-    
-    const char *p;
-    bool flag;
-    char *s = str;
-    while(*s != 0)
-    {
-        p = delim;
-        flag = false;
-        while(*p != 0)
-        {
-            if(*p++ == *s)
-            {
-                flag = true;
-                *s = 0;
-                break;
-            }
-        }
-        ++s;
-        if(flag)
-        {
-            left = s;
-            return str;
-        }
-    }
-    left = NULL;
-    return str;
+	static char* left = NULL;
+	if(str == NULL) str = left;
+	
+	bool flag;
+	char *s = str;
+	while(*s != 0)
+	{
+		flag = false;
+		if(*delim == *s)
+		{ // when it meet the delimiter
+			flag = true;
+			*s = 0; // add '\0' to end the current piece substring
+		}
+		++s; // move to next char of input string
+		if(flag)
+		{
+			left = s; // record the rest of string
+			return str;
+		}
+	}
+	left = NULL; // When reach the end of the string, and did not meet the token.
+	return str;
 }
+
 
 char *aaa_packet_serialize(const struct AaaPacket packet) {
     size_t packet_length = packet.message_length + packet.nonce_length + packet.signature_length;
