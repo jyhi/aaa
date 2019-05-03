@@ -49,44 +49,56 @@ char *aaa_packet_serialize(const struct AaaPacket packet) {
 }
 
 struct AaaPacket *aaa_packet_deserialize(const char * const packet_str) {
-	struct AaaPacket *res = (struct AaaPacket *)malloc(sizeof(struct AaaPacket));
-	char *token;
-	
-	// Check whether the string starts with "AAA"
-	token = str_split(packet_str, "!");
-	if (strncmp(token, "AAA", 3) != 0) return NULL;
-	
-	// Extract message from the packet_str
-	token = str_split(NULL, ";");
-	res->message = strcat(token, "\0");
-	
-	// Extract nonce from the packet_str
-	token = str_split(NULL, ",");
-	res->nonce = strcat(token, "\0");
-	
-	// Extract signature from the packet_str
-	token = str_split(NULL, ".");
-	res->signature = strcat(token, "\0");
-	
-	return res;
+    struct AaaPacket *res = (struct AaaPacket *)malloc(sizeof(struct AaaPacket));
+    char *copy_packet_str = (char *)malloc(sizeof(char) * strlen(packet_str));
+    strcpy(copy_packet_str, packet_str);
+    char *token;
+    
+    // Check whether the string starts with "AAA"
+    token = str_split(copy_packet_str, "!");
+    if (strncmp(token, "AAA", 3) != 0) return NULL;
+    
+    // Extract message from the packet_str
+    token = str_split(NULL, ";");
+    res->message_length = strlen(token);
+    res->message = (uint8_t *)malloc(sizeof(uint8_t) * strlen(token));
+    memcpy(res->message, token, res->message_length);
+    
+    // Extract nonce from the packet_str
+    token = str_split(NULL, ",");
+    res->nonce_length = strlen(token);
+    res->nonce = (uint8_t *)malloc(sizeof(uint8_t) * strlen(token));
+    memcpy(res->nonce, token, res->nonce_length);
+    
+    // Extract signature from the packet_str
+    token = str_split(NULL, ".");
+    res->signature_length = strlen(token);
+    res->signature = (uint8_t *)malloc(sizeof(uint8_t) * strlen(token));
+    memcpy(res->signature, token, res->signature_length);
+    
+    free(copy_packet_str);
+    return res;
 }
 
 
 // for testing
 // int main() {
-// 	struct AaaPacket test;
-// 	test.message = "[message]";
-// 	test.nonce = "[nonce]";
-// 	test.signature = "[signature]";
-// 	char *res = aaa_packet_serialize(test);
+//     	struct AaaPacket test;
+//     	test.message = "[message]";
+//     	test.message_length = 9;
+//     	test.nonce = "[nonce]";
+//     	test.nonce_length = 7;
+//     	test.signature = "[signature]";
+//     	test.signature_length = 11;
+//     	char *res = aaa_packet_serialize(test);
 // 	printf("%s\n", res);
 
 // 	struct AaaPacket *test_des = aaa_packet_deserialize(res);
 // 	if (test_des != NULL)
 // 	{
-// 		printf("message is: %s\n", test_des->message);
-// 		printf("nonce is: %s\n", test_des->nonce);
-// 		printf("signature is: %s\n", test_des->signature);
+// 		printf("message is: %s %d\n", test_des->message, test_des->message_length);
+//        	printf("nonce is: %s %d\n", test_des->nonce, test_des->nonce_length);
+//        	printf("signature is: %s %d\n", test_des->signature, test_des->signature_length);
 // 	} else {
 // 		printf("NULL\n");
 // 	}
