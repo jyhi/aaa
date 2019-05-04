@@ -31,12 +31,24 @@ OBJS = aaa-addcontact.o \
 # Packages (dependencies) used in the project
 PKGS = gtk+-3.0 gee-0.8 json-glib-1.0 libsodium
 
+# The following are binding packages in the project acting as vala packages
+# (without the .vapi suffix)
+VAPIS = aaa-vala-bindings
+
 # Insert dependency flags
 CFLAGS += $(shell pkg-config --cflags $(PKGS))
+
+# Also let C compiler to search for headers in current directory, since valac
+# generates `#include`s with angle brackets (it should be in quotes!).
+CFLAGS += -I.
 
 # Same for vala
 # NOTE: Excluding libsodium
 VALACFLAGS += $(foreach pkg,$(filter-out libsodium, $(PKGS)),--pkg $(pkg))
+VALACFLAGS += $(foreach pkg,$(VAPIS),--pkg $(pkg))
+
+# Also let vala to search for VAPI bindings in current directory
+VALACFLAGS += --vapidir .
 
 # XXX: Tell Vala about GResource
 GRESOURCES = ../res/aaa-resources.gresource.xml
