@@ -14,8 +14,11 @@
  * @return 0 on error, 1 on success.
  */
 int aaa_message_encrypt(uint8_t *cipher,
+                        size_t  *cipher_length,
                         uint8_t *nonce,
+                        size_t  *nonce_length,
                         uint8_t *mac,
+                        size_t  *mac_length,
                         const struct AaaMessage * const message);
 
 /**
@@ -29,7 +32,10 @@ int aaa_message_encrypt(uint8_t *cipher,
  */
 int aaa_message_decrypt(struct AaaMessage *message,
                         const uint8_t * const cipher,
+                        const size_t          cipher_length,
                         const uint8_t * const nonce,
-                        const uint8_t * const mac);
+                        const size_t          nonce_length,
+                        const uint8_t * const mac,
+                        const size_t          mac_length);
 
 #endif
