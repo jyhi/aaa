@@ -23,6 +23,13 @@ struct AaaMessage {
 };
 
 /**
+ * Free memory allocated in struct AaaMessage.
+ *
+ * @param message [in] The `struct AaaMessage`.
+ */
+void aaa_message_free(struct AaaMessage *message);
+
+/**
  * Transform a `struct AaaMessage` into its corresponding string representation.
  *
  * @param message [in] The C structure representation of the AAA message.

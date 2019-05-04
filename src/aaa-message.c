@@ -5,9 +5,18 @@
 
 #define BUFSIZE 2048
 
+void aaa_message_free(struct AaaMessage *message) {
+    if (message->id)
+        free(message->id);
+    if (message->message)
+        free(message->message);
+    if (message->cert)
+        free(message->cert);
+}
+
 char *aaa_message_serialize(const struct AaaMessage * const Aaa_msg) {
     if (!Aaa_msg) return NULL;
-    
+
     char *json_msg = (char *)malloc(sizeof(char) * BUFSIZE);
     strcpy(json_msg, "{\n");
     switch (Aaa_msg->type) {
