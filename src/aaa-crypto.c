@@ -1,5 +1,6 @@
-#include <stdio.h>
 #include <stdint.h>
+#include <glib.h>
+#include "aaa-message.h"
 
 int aaa_message_encrypt(uint8_t *cipher,
                         size_t  *cipher_length,
@@ -9,7 +10,7 @@ int aaa_message_encrypt(uint8_t *cipher,
                         size_t  *mac_length,
                         const struct AaaMessage * const message)
 {
-  debug("encrypting message sending to %s", message->id);
+  g_debug("encrypting message sending to %s", message->id);
 
   // unimpl
 
@@ -25,7 +26,7 @@ int aaa_message_decrypt(struct AaaMessage *message,
                         const uint8_t * const mac,
                         const size_t  * const mac_length)
 {
-  debug("decrypting message sent from %s", message->id);
+  g_debug("decrypting message sent from %s", message->id);
 
   // unimpl
 
