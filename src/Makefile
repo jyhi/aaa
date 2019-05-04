@@ -23,6 +23,8 @@ OBJS = aaa-addcontact.o \
 	aaa-socketservice.o \
 	aaa-msgrow.o \
 	aaa-configmgr.o \
+	aaa-message.o \
+	aaa-crypto.o \
 	app.o \
 	main.o
 
