@@ -22,6 +22,16 @@ struct AaaUserKey {
 };
 
 /**
+ * Securely free AaaKeyPair.
+ *
+ * This usually involves several techniques to wipe the memory, but generally
+ * just a wrapper of libsodium's safe memory APIs.
+ *
+ * @param keypair [in] The AaaKeyPair.
+ */
+void aaa_key_pair_free(struct AaaKeyPair *keypair);
+
+/**
  * Securely free AaaUserKey.
  *
  * This usually involves several techniques to wipe the memory, but generally

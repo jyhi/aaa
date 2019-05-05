@@ -3,6 +3,16 @@
 #include <sodium.h>
 #include "aaa-crypto.h"
 
+void aaa_key_pair_free(struct AaaKeyPair *keypair)
+{
+  if (keypair->public_key_length > 0)
+    sodium_free(keypair->public_key);
+  if (keypair->secret_key_length > 0)
+    sodium_free(keypair->secret_key);
+
+  sodium_free(keypair);
+}
+
 void aaa_user_key_free(struct AaaUserKey *key)
 {
   g_debug("freeing user key pairs");
