@@ -111,18 +111,31 @@ mem_fail:
   return 1; // unreachable
 }
 
-int aaa_message_encrypt(struct AaaMessage *cipher, const struct AaaMessage * const plain)
+int aaa_message_encrypt(uint8_t *cipher,
+                        size_t  *cipher_length,
+                        uint8_t *nonce,
+                        size_t  *nonce_length,
+                        uint8_t *mac,
+                        size_t  *mac_length,
+                        const struct AaaMessage * const message)
 {
-  g_debug("encrypting message sending to %s", plain->id);
+  g_debug("encrypting message sending to %s", message->id);
 
   // unimpl
 
   return 0;
 }
 
-int aaa_message_decrypt(struct AaaMessage *plain, const struct AaaMessage * const cipher)
+
+int aaa_message_decrypt(struct AaaMessage *message,
+                        const uint8_t * const cipher,
+                        const size_t  * const cipher_length,
+                        const uint8_t * const nonce,
+                        const size_t  * const nonce_length,
+                        const uint8_t * const mac,
+                        const size_t  * const mac_length)
 {
-  g_debug("decrypting message...");
+  g_debug("decrypting message sent from %s", message->id);
 
   // unimpl
 
