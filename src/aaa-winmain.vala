@@ -42,8 +42,44 @@ namespace Aaa {
       this.socket_service = socket_service;
     }
 
+    public void welcome() {
+      this.stack_welcome.set_visible_child_name("stackpage_welcome");
+    }
+
+    public void chat() {
+      this.lbl_user_id.set_text(config_get_id());
+      this.stack_welcome.set_visible_child_name("stackpage_chat");
+    }
+
     public void push_message(string id, string msg) {
       this.box_messages.add(new MsgRow(id, msg));
+    }
+
+    [GtkCallback]
+    private void btn_welcome_ignite_clicked_cb() {
+      // Create user key
+      UserKey *key;
+      int r = keypair_gen(out key);
+      if (r == 0) {
+        var dlg = new MessageDialog(
+          this,
+          DialogFlags.DESTROY_WITH_PARENT | DialogFlags.MODAL,
+          MessageType.ERROR,
+          ButtonsType.OK,
+          "Failed to generate a key pair for you. This may because various reasons, but currently we cannot perform anything further.");
+        dlg.run();
+        return;
+      }
+
+      // Generate user config
+      config_set_id(this.entry_welcome_user_id.get_text());
+      config_set_cert(key.sign.public_key);
+      config_set_key(key.sign.secret_key);
+      config_save();
+
+      // Make visual changes
+      this.lbl_user_id.set_text(config_get_id());
+      this.stack_welcome.set_visible_child_name("stackpage_chat");
     }
 
     [GtkCallback]

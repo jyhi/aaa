@@ -13,6 +13,15 @@ namespace Aaa {
       socket_service.set_view(win_main);
       win_main.set_socket_service(socket_service);
 
+      // Load configuration
+      if (config_load() == 0) {
+        // Let user set an initial one
+        win_main.welcome();
+      } else {
+        // Configuration exists, go to chat page
+        win_main.chat();
+      }
+
       // Activate back-end
       socket_service.listen(1234);
 

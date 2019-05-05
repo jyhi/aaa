@@ -120,6 +120,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
                 <property name="can_focus">True</property>
                 <property name="receives_default">True</property>
                 <property name="halign">center</property>
+                <signal name="clicked" handler="btn_welcome_ignite_clicked_cb" swapped="no"/>
                 <style>
                   <class name="suggested-action"/>
                 </style>
