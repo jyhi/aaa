@@ -1,12 +1,27 @@
 #include <stdint.h>
 #include <glib.h>
+#include <sodium.h>
 #include "aaa-message.h"
 
 void aaa_user_key_free(struct AaaUserKey *key)
 {
-  g_debug("freeing user key");
+  g_debug("freeing user key pairs");
 
-  // unimpl
+  if (key->sign->public_key_length > 0)
+    sodium_free(key->sign->public_key);
+  if (key->sign->secret_key_length > 0)
+    sodium_free(key->sign->secret_key);
+
+  sodium_free(key->sign);
+
+  if (key->encrypt->public_key_length > 0)
+    sodium_free(key->encrypt->public_key);
+  if (key->encrypt->secret_key_length > 0)
+    sodium_free(key->encrypt->secret_key);
+
+  sodium_free(key->encrypt);
+
+  sodium_free(key);
 }
 
 int aaa_keypair_gen(struct AaaUserKey *key)
