@@ -91,7 +91,7 @@ int aaa_config_load(void)
     g_warning("configmgr: id not found in config file: %s", err->message);
     g_clear_error(&err);
   }
-  _id = NULL;
+  _id = id;
 
   // Load certificate
   gchar *cert = g_key_file_get_string(conf, "AAA", "cert", &err);
