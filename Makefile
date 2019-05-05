@@ -38,18 +38,22 @@ PKGS = gtk+-3.0 gio-2.0 gee-0.8 json-glib-1.0 libsodium
 LDFLAGS += $(shell pkg-config --libs $(PKGS))
 
 # Resource directory and source directory
-RESDIR = res
-SRCDIR = src
+RESDIR  = res
+SRCDIR  = src
+TESTDIR = tests
 
-.PHONY: all clean $(RESDIR) $(SRCDIR)
+.PHONY: all clean test $(RESDIR) $(SRCDIR) $(TESTDIR)
 
 all: $(BINNAME)
 
 clean:
-	for dir in $(RESDIR) $(SRCDIR); do \
+	for dir in $(RESDIR) $(SRCDIR) $(TESTDIR); do \
 		$(MAKE) clean -C $$dir; \
 	done
 	$(RM) $(RMFLAGS) $(BINNAME)
+
+test:
+	$(MAKE) -C $(TESTDIR)
 
 $(RESDIR):
 	$(MAKE) -C $@
