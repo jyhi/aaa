@@ -2,6 +2,15 @@
 #include <glib.h>
 #include "aaa-message.h"
 
+int aaa_keypair_gen(struct AaaUserKey *key)
+{
+  g_debug("generating user keys");
+
+  // unimpl
+
+  return 0;
+}
+
 int aaa_message_encrypt(struct AaaMessage *cipher, const struct AaaMessage * const plain)
 {
   g_debug("encrypting message sending to %s", plain->id);

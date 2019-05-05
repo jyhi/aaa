@@ -5,6 +5,33 @@
 #include "aaa-message.h"
 
 /**
+ * A pair of key (public key and private key).
+ */
+struct AaaKeyPair {
+  uint8_t *public_key;        ///< Public key
+  size_t   public_key_length; ///< Length of public key
+  uint8_t *secret_key;        ///< Secret key
+  size_t   secret_key_length; ///< Length of secret key
+};
+
+/**
+ * A group of user keys.
+ */
+struct AaaUserKey {
+  struct AaaKeyPair sign;    ///< Key pair for signing
+  struct AaaKeyPair encrypt; ///< Key pair for encryption
+};
+
+/**
+ * Generate user key, which contains two key pairs, one for signing, and one for
+ * encryption.
+ *
+ * @param key [out] The generated key.
+ * @return 0 for failure, 1 for success. On failure, key is remained untouched.
+ */
+int aaa_keypair_gen(struct AaaUserKey *key);
+
+/**
  * Encrypt an AAA message.
  *
  * @param cipher [out] Ciphertext message.
