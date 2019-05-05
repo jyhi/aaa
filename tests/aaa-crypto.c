@@ -100,9 +100,13 @@ int main(void)
   puts("> encryption succeed");
 
   char *b64_cipher = aaa_bin2base64(cipher, cipher_len);
+  char *b64_nonce  = aaa_bin2base64(nonce, nonce_len);
+  char *b64_mac    = aaa_bin2base64(mac, mac_len);
 
-  printf("> cipher text:\n%s\n", b64_cipher);
+  printf("> cipher text:\n%s\n> nonce:\n%s\n> mac:\n%s\n", b64_cipher, b64_nonce, b64_mac);
 
+  g_free(b64_mac);
+  g_free(b64_nonce);
   g_free(b64_cipher);
 
   puts("> (1/2) decrypting message from yourself...");
