@@ -219,9 +219,30 @@ int aaa_message_sign(uint8_t **signature,
 {
   g_debug("signing message...");
 
-  // unimpl
+  int r = 0;
 
-  return 0;
+  // Allocate memory for the signature
+  char *signature_buf = g_malloc(crypto_sign_BYTES);
+
+  // "It is safe to ignore siglen and always consider a signature as
+  // crypto_sign_BYTES bytes long: shorter signatures will be transparently
+  // padded with zeros if necessary."
+  // https://download.libsodium.org/doc/public-key_cryptography/public-key_signatures
+
+  r = crypto_sign_detached(signature_buf, NULL, message, message_length, sender_sk);
+  if (r < 0) {
+    g_warning("%s: crypto_sign_detached returned %d, indicating an error.", __func__, r);
+    g_free(signature_buf);
+    return 0;
+  }
+
+  // Fill outward parameters
+  *signature = signature_buf;
+  *signature_length = crypto_sign_BYTES;
+
+  g_debug("signing succeeded");
+
+  return 1;
 }
 
 int aaa_message_verify(const uint8_t * const message,
@@ -233,9 +254,17 @@ int aaa_message_verify(const uint8_t * const message,
 {
   g_debug("verifying message...");
 
-  // unimpl
+  int r = 0;
 
-  return 0;
+  r = crypto_sign_verify_detached(signature, message, message_length, sender_pk);
+  if (r < 0) {
+    g_warning("%s: signature verification failed, maybe incorrect?", __func__, r);
+    return 0;
+  }
+
+  g_debug("verification succeeded");
+
+  return 1;
 }
 
 char *aaa_bin2base64(const uint8_t * const bin, const size_t bin_length)
