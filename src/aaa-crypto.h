@@ -80,7 +80,7 @@ int aaa_message_encrypt(uint8_t *cipher,
  */
 int aaa_message_decrypt(char *message,
                         const uint8_t * const sender_pk,
-                        const size_t sender_pk_length,
+                        const size_t          sender_pk_length,
                         const uint8_t * const cipher,
                         const size_t          cipher_length,
                         const uint8_t * const nonce,
