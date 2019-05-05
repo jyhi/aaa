@@ -47,47 +47,25 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
       </object>
     </child>
     <child>
-      <object class="GtkPaned">
+      <object class="GtkStack">
         <property name="visible">True</property>
-        <property name="can_focus">True</property>
-        <property name="wide_handle">True</property>
+        <property name="can_focus">False</property>
+        <property name="transition_type">over-left-right</property>
         <child>
           <object class="GtkBox">
-            <property name="width_request">240</property>
             <property name="visible">True</property>
             <property name="can_focus">False</property>
+            <property name="halign">center</property>
+            <property name="valign">center</property>
             <property name="orientation">vertical</property>
+            <property name="spacing">12</property>
             <child>
-              <object class="GtkBox">
+              <object class="GtkImage">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="border_width">6</property>
-                <property name="spacing">6</property>
-                <child>
-                  <object class="GtkImage" id="icon_user">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="icon_name">user</property>
-                    <property name="icon_size">6</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkLabel" id="lbl_user_id">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <property name="label" translatable="yes">lmy441900</property>
-                  </object>
-                  <packing>
-                    <property name="expand">False</property>
-                    <property name="fill">True</property>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
+                <property name="pixel_size">96</property>
+                <property name="icon_name">applications-accessories</property>
+                <property name="icon_size">0</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -96,9 +74,14 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
               </packing>
             </child>
             <child>
-              <object class="GtkSeparator">
+              <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
+                <property name="label" translatable="yes">Welcome</property>
+                <attributes>
+                  <attribute name="weight" value="thin"/>
+                  <attribute name="scale" value="4"/>
+                </attributes>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -110,15 +93,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
               <object class="GtkLabel">
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">start</property>
-                <property name="margin_left">6</property>
-                <property name="margin_right">6</property>
-                <property name="margin_top">6</property>
-                <property name="margin_bottom">6</property>
-                <property name="label" translatable="yes">Contact</property>
-                <attributes>
-                  <attribute name="weight" value="bold"/>
-                </attributes>
+                <property name="label" translatable="yes">Type your ID below to start.</property>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -127,70 +102,27 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
               </packing>
             </child>
             <child>
-              <object class="GtkScrolledWindow">
+              <object class="GtkEntry" id="entry_welcome_user_id">
                 <property name="visible">True</property>
                 <property name="can_focus">True</property>
-                <property name="shadow_type">in</property>
-                <child>
-                  <object class="GtkViewport">
-                    <property name="visible">True</property>
-                    <property name="can_focus">False</property>
-                    <child>
-                      <object class="GtkListBox" id="listbox_users">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <signal name="row-selected" handler="listbox_users_row_selected_cb" swapped="no"/>
-                      </object>
-                    </child>
-                  </object>
-                </child>
+                <property name="halign">center</property>
               </object>
               <packing>
-                <property name="expand">True</property>
+                <property name="expand">False</property>
                 <property name="fill">True</property>
                 <property name="position">3</property>
               </packing>
             </child>
             <child>
-              <object class="GtkActionBar">
+              <object class="GtkButton" id="btn_welcome_ignite">
+                <property name="label" translatable="yes">Ignite</property>
                 <property name="visible">True</property>
-                <property name="can_focus">False</property>
-                <child>
-                  <object class="GtkButton" id="btn_user_add">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <signal name="clicked" handler="btn_user_add_clicked_cb" swapped="no"/>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="stock">gtk-add</property>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">0</property>
-                  </packing>
-                </child>
-                <child>
-                  <object class="GtkButton" id="btn_user_del">
-                    <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="receives_default">True</property>
-                    <signal name="clicked" handler="btn_user_del_clicked_cb" swapped="no"/>
-                    <child>
-                      <object class="GtkImage">
-                        <property name="visible">True</property>
-                        <property name="can_focus">False</property>
-                        <property name="stock">gtk-delete</property>
-                      </object>
-                    </child>
-                  </object>
-                  <packing>
-                    <property name="position">1</property>
-                  </packing>
-                </child>
+                <property name="can_focus">True</property>
+                <property name="receives_default">True</property>
+                <property name="halign">center</property>
+                <style>
+                  <class name="suggested-action"/>
+                </style>
               </object>
               <packing>
                 <property name="expand">False</property>
@@ -200,31 +132,52 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
             </child>
           </object>
           <packing>
-            <property name="resize">False</property>
-            <property name="shrink">True</property>
+            <property name="name">page0</property>
+            <property name="title" translatable="yes">page0</property>
           </packing>
         </child>
         <child>
-          <object class="GtkStack" id="stack_main">
+          <object class="GtkPaned">
             <property name="visible">True</property>
-            <property name="can_focus">False</property>
-            <property name="transition_type">slide-left-right</property>
+            <property name="can_focus">True</property>
+            <property name="wide_handle">True</property>
             <child>
               <object class="GtkBox">
+                <property name="width_request">240</property>
                 <property name="visible">True</property>
                 <property name="can_focus">False</property>
-                <property name="halign">center</property>
-                <property name="valign">center</property>
                 <property name="orientation">vertical</property>
                 <child>
-                  <object class="GtkImage">
+                  <object class="GtkBox">
                     <property name="visible">True</property>
-                    <property name="can_focus">True</property>
-                    <property name="has_focus">True</property>
-                    <property name="is_focus">True</property>
-                    <property name="pixel_size">128</property>
-                    <property name="icon_name">instant-messenger</property>
-                    <property name="icon_size">0</property>
+                    <property name="can_focus">False</property>
+                    <property name="border_width">6</property>
+                    <property name="spacing">6</property>
+                    <child>
+                      <object class="GtkImage" id="icon_user">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="icon_name">user</property>
+                        <property name="icon_size">6</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkLabel" id="lbl_user_id">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="label" translatable="yes">lmy441900</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
                   </object>
                   <packing>
                     <property name="expand">False</property>
@@ -232,17 +185,35 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
                     <property name="position">0</property>
                   </packing>
                 </child>
-              </object>
-              <packing>
-                <property name="name">stackpage_welcome</property>
-                <property name="title" translatable="yes">Welcome</property>
-              </packing>
-            </child>
-            <child>
-              <object class="GtkPaned">
-                <property name="visible">True</property>
-                <property name="can_focus">True</property>
-                <property name="orientation">vertical</property>
+                <child>
+                  <object class="GtkSeparator">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">1</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkLabel">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">start</property>
+                    <property name="margin_top">6</property>
+                    <property name="margin_bottom">6</property>
+                    <property name="label" translatable="yes">Contact</property>
+                    <attributes>
+                      <attribute name="weight" value="bold"/>
+                    </attributes>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">2</property>
+                  </packing>
+                </child>
                 <child>
                   <object class="GtkScrolledWindow">
                     <property name="visible">True</property>
@@ -253,30 +224,110 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
                         <child>
-                          <object class="GtkBox" id="box_messages">
+                          <object class="GtkListBox" id="listbox_users">
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
-                            <property name="valign">end</property>
-                            <property name="border_width">6</property>
-                            <property name="orientation">vertical</property>
-                            <child>
-                              <placeholder/>
-                            </child>
+                            <signal name="row-selected" handler="listbox_users_row_selected_cb" swapped="no"/>
                           </object>
                         </child>
                       </object>
                     </child>
                   </object>
                   <packing>
-                    <property name="resize">True</property>
-                    <property name="shrink">False</property>
+                    <property name="expand">True</property>
+                    <property name="fill">True</property>
+                    <property name="position">3</property>
                   </packing>
                 </child>
                 <child>
-                  <object class="GtkBox">
-                    <property name="height_request">150</property>
+                  <object class="GtkActionBar">
                     <property name="visible">True</property>
                     <property name="can_focus">False</property>
+                    <child>
+                      <object class="GtkButton" id="btn_user_add">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="btn_user_add_clicked_cb" swapped="no"/>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="stock">gtk-add</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                    <child>
+                      <object class="GtkButton" id="btn_user_del">
+                        <property name="visible">True</property>
+                        <property name="can_focus">True</property>
+                        <property name="receives_default">True</property>
+                        <signal name="clicked" handler="btn_user_del_clicked_cb" swapped="no"/>
+                        <child>
+                          <object class="GtkImage">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="stock">gtk-delete</property>
+                          </object>
+                        </child>
+                      </object>
+                      <packing>
+                        <property name="position">1</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="expand">False</property>
+                    <property name="fill">True</property>
+                    <property name="position">4</property>
+                  </packing>
+                </child>
+              </object>
+              <packing>
+                <property name="resize">False</property>
+                <property name="shrink">True</property>
+              </packing>
+            </child>
+            <child>
+              <object class="GtkStack" id="stack_main">
+                <property name="visible">True</property>
+                <property name="can_focus">False</property>
+                <property name="transition_type">slide-left-right</property>
+                <child>
+                  <object class="GtkBox">
+                    <property name="visible">True</property>
+                    <property name="can_focus">False</property>
+                    <property name="halign">center</property>
+                    <property name="valign">center</property>
+                    <property name="orientation">vertical</property>
+                    <child>
+                      <object class="GtkImage">
+                        <property name="visible">True</property>
+                        <property name="can_focus">False</property>
+                        <property name="pixel_size">128</property>
+                        <property name="icon_name">instant-messenger</property>
+                        <property name="icon_size">0</property>
+                      </object>
+                      <packing>
+                        <property name="expand">False</property>
+                        <property name="fill">True</property>
+                        <property name="position">0</property>
+                      </packing>
+                    </child>
+                  </object>
+                  <packing>
+                    <property name="name">stackpage_welcome</property>
+                    <property name="title" translatable="yes">Welcome</property>
+                  </packing>
+                </child>
+                <child>
+                  <object class="GtkPaned">
+                    <property name="visible">True</property>
+                    <property name="can_focus">True</property>
                     <property name="orientation">vertical</property>
                     <child>
                       <object class="GtkScrolledWindow">
@@ -288,40 +339,54 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
                             <property name="visible">True</property>
                             <property name="can_focus">False</property>
                             <child>
-                              <object class="GtkTextView" id="textview_tosend">
+                              <object class="GtkBox" id="box_messages">
                                 <property name="visible">True</property>
-                                <property name="can_focus">True</property>
-                                <property name="wrap_mode">word</property>
-                                <property name="left_margin">6</property>
-                                <property name="right_margin">6</property>
-                                <property name="top_margin">6</property>
-                                <property name="bottom_margin">6</property>
-                                <property name="accepts_tab">False</property>
+                                <property name="can_focus">False</property>
+                                <property name="valign">end</property>
+                                <property name="border_width">6</property>
+                                <property name="orientation">vertical</property>
+                                <child>
+                                  <placeholder/>
+                                </child>
                               </object>
                             </child>
                           </object>
                         </child>
                       </object>
                       <packing>
-                        <property name="expand">True</property>
-                        <property name="fill">True</property>
-                        <property name="position">0</property>
+                        <property name="resize">True</property>
+                        <property name="shrink">False</property>
                       </packing>
                     </child>
                     <child>
-                      <object class="GtkButtonBox">
+                      <object class="GtkBox">
+                        <property name="height_request">150</property>
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="border_width">6</property>
-                        <property name="layout_style">end</property>
+                        <property name="orientation">vertical</property>
                         <child>
-                          <object class="GtkButton" id="btn_send">
-                            <property name="label" translatable="yes">_Send</property>
+                          <object class="GtkScrolledWindow">
                             <property name="visible">True</property>
                             <property name="can_focus">True</property>
-                            <property name="receives_default">True</property>
-                            <property name="use_underline">True</property>
-                            <signal name="clicked" handler="btn_send_clicked_cb" swapped="no"/>
+                            <property name="shadow_type">in</property>
+                            <child>
+                              <object class="GtkViewport">
+                                <property name="visible">True</property>
+                                <property name="can_focus">False</property>
+                                <child>
+                                  <object class="GtkTextView" id="textview_tosend">
+                                    <property name="visible">True</property>
+                                    <property name="can_focus">True</property>
+                                    <property name="wrap_mode">word</property>
+                                    <property name="left_margin">6</property>
+                                    <property name="right_margin">6</property>
+                                    <property name="top_margin">6</property>
+                                    <property name="bottom_margin">6</property>
+                                    <property name="accepts_tab">False</property>
+                                  </object>
+                                </child>
+                              </object>
+                            </child>
                           </object>
                           <packing>
                             <property name="expand">True</property>
@@ -329,30 +394,58 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
                             <property name="position">0</property>
                           </packing>
                         </child>
+                        <child>
+                          <object class="GtkButtonBox">
+                            <property name="visible">True</property>
+                            <property name="can_focus">False</property>
+                            <property name="border_width">6</property>
+                            <property name="layout_style">end</property>
+                            <child>
+                              <object class="GtkButton" id="btn_send">
+                                <property name="label" translatable="yes">_Send</property>
+                                <property name="visible">True</property>
+                                <property name="can_focus">True</property>
+                                <property name="receives_default">True</property>
+                                <property name="use_underline">True</property>
+                                <signal name="clicked" handler="btn_send_clicked_cb" swapped="no"/>
+                              </object>
+                              <packing>
+                                <property name="expand">True</property>
+                                <property name="fill">True</property>
+                                <property name="position">0</property>
+                              </packing>
+                            </child>
+                          </object>
+                          <packing>
+                            <property name="expand">False</property>
+                            <property name="fill">True</property>
+                            <property name="position">1</property>
+                          </packing>
+                        </child>
                       </object>
                       <packing>
-                        <property name="expand">False</property>
-                        <property name="fill">True</property>
-                        <property name="position">1</property>
+                        <property name="resize">False</property>
+                        <property name="shrink">False</property>
                       </packing>
                     </child>
                   </object>
                   <packing>
-                    <property name="resize">False</property>
-                    <property name="shrink">False</property>
+                    <property name="name">stackpage_messaging</property>
+                    <property name="title" translatable="yes">Messaging</property>
+                    <property name="position">1</property>
                   </packing>
                 </child>
               </object>
               <packing>
-                <property name="name">stackpage_messaging</property>
-                <property name="title" translatable="yes">Messaging</property>
-                <property name="position">1</property>
+                <property name="resize">True</property>
+                <property name="shrink">False</property>
               </packing>
             </child>
           </object>
           <packing>
-            <property name="resize">True</property>
-            <property name="shrink">False</property>
+            <property name="name">page1</property>
+            <property name="title" translatable="yes">page1</property>
+            <property name="position">1</property>
           </packing>
         </child>
       </object>

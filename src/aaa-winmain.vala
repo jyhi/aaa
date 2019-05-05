@@ -7,6 +7,10 @@ namespace Aaa {
     [GtkChild]
     private HeaderBar headerbar_main;
     [GtkChild]
+    private Entry entry_welcome_user_id;
+    [GtkChild]
+    private Button btn_welcome_ignite;
+    [GtkChild]
     private Label lbl_user_id;
     [GtkChild]
     private ListBox listbox_users;
