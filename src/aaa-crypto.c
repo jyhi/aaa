@@ -136,7 +136,6 @@ int aaa_message_encrypt(uint8_t *cipher,
   size_t message_len = strlen(message);
 
   // Generate one-time number (nonce) for encryption use
-  uint8_t *nonce = crypto_box_NONCEBYTES;
   randombytes_buf(nonce, crypto_box_NONCEBYTES);
 
   // Get user private key
