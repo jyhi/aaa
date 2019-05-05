@@ -61,7 +61,7 @@ namespace Aaa {
   );
 
   public int message_sign(
-    out uint8[] signature,
+    [CCode (array_length_type = "size_t")] out uint8[] signature,
     [CCode (array_length_type = "size_t")] uint8[] sender_sk,
     [CCode (array_length_type = "size_t")] uint8[] message
   );
@@ -104,7 +104,7 @@ namespace Aaa {
   [CCode (array_length_pos = 0.9, array_length_type = "size_t")]
   public uint8[] config_get_key();
 
-  public void config_set_key(uint8[] key);
+  public void config_set_key([CCode (array_length_type = "size_t")] uint8[] key);
 
   public int config_load();
 
