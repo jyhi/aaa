@@ -202,16 +202,47 @@ char *aaa_bin2base64(const uint8_t * const bin, const size_t bin_length)
 {
   g_debug("transforming binary data to base64...");
 
-  // unimpl
+  // Calculate size of buffer to store the Base64 string
+  // (including trailing NUL)
+  size_t ret_size = sodium_base64_encoded_len(bin_length, sodium_base64_VARIANT_ORIGINAL);
 
-  return NULL;
+  // Allocate memory
+  char *ret = g_malloc(ret_size);
+
+  // Perform tranformation
+  return sodium_bin2base64(ret, ret_size, bin, bin_length, sodium_base64_VARIANT_ORIGINAL);
 }
 
 uint8_t *aaa_base642bin(size_t *bin_size, const char * const base64)
 {
   g_debug("transforming base64 to binary data...");
 
-  // unimpl
+  // Size of buffer to store the binary data is not larger than the base64 one
+  // (probably?)
+  size_t buf_size = strlen(base64);
 
-  return NULL;
+  // Allocate memory
+  char *buf = g_malloc(buf_size);
+
+  // The actual binary size to receive from libsodium
+  size_t ret_size = 0;
+
+  // Perform transformation
+  int r = sodium_base642bin(buf, buf_size, base64, buf_size, NULL, &ret_size, NULL, sodium_base64_VARIANT_ORIGINAL);
+  if (r < 0) {
+    // Something happened, but I don't bother to take care of them
+    g_warning("%s: failed to parse the Base64 input, maybe corrupted?", __func__);
+    return NULL;
+  }
+
+  // Transformation succeedded, shrink the memory
+  char *ret = g_memdup(buf, ret_size);
+
+  // Fill size of the returned buffer
+  *bin_size = ret_size;
+
+  // Free unused buffer
+  g_free(buf); buf = NULL;
+
+  return ret;
 }
