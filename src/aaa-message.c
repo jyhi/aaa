@@ -69,6 +69,7 @@ char *aaa_message_serialize(const struct AaaMessage * const Aaa_msg) {
 }
 
 struct AaaMessage *aaa_message_deserialize(const char * const message_str) {
+    if (!message_str) return NULL;
     struct AaaMessage *messagePacket = (struct AaaMessage *)malloc(sizeof(struct AaaMessage));
     
     if (strncmp(message_str, "/hello", 6) == 0)
