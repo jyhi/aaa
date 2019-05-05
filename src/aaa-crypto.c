@@ -123,6 +123,11 @@ int aaa_message_encrypt(uint8_t *cipher,
                         const size_t recipient_pk_length,
                         const char * const message)
 {
+  if (sodium_init() == -1) {
+    g_warning("%s: sodium_init failed", __func__);
+    return 0;
+  }
+
   g_debug("encrypting message");
 
   int r = 0;
