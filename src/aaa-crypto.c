@@ -118,6 +118,8 @@ int aaa_message_encrypt(uint8_t *cipher,
                         size_t  *nonce_length,
                         uint8_t *mac,
                         size_t  *mac_length,
+                        const uint8_t * const recipient_pk,
+                        const size_t recipient_pk_length,
                         const char * const message)
 {
   g_debug("encrypting message");
@@ -126,7 +128,6 @@ int aaa_message_encrypt(uint8_t *cipher,
 
   return 0;
 }
-
 
 int aaa_message_decrypt(char *message,
                         const uint8_t * const cipher,
