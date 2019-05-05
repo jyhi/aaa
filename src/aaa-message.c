@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <glib.h>
 #include "aaa-message.h"
 
 #define BUFSIZE 2048
@@ -8,10 +9,18 @@
 void aaa_message_free(struct AaaMessage *message) {
     if (message->id)
         free(message->id);
-    if (message->message)
-        free(message->message);
-    if (message->cert)
-        free(message->cert);
+
+    if (message->type == AAA_MESSAGE_TYPE_HELLO) {
+        if (message->cert)
+            free(message->cert);
+    } else if (message->type == AAA_MESSAGE_TYPE_MSG) {
+        if (message->message)
+            free(message->message);
+    } else if (message->type == AAA_MESSAGE_TYPE_BYE) {
+        // nothing to do
+    } else {
+        g_warning("aaa_message_free: unknown type inspected, this is a bug.");
+    }
 }
 
 char *aaa_message_serialize(const struct AaaMessage * const Aaa_msg) {
