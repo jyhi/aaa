@@ -51,13 +51,14 @@ namespace Aaa {
       var daemon = new Daemon(conn, true, this.view);
 
       // Handshake
-      try {
-        debug("handshaking with peer at %s:%u", ip, port);
-        daemon.handshake(false); // is "client"
-      } catch (Error e) {
-        message("handshaking failed with peer at %s:%u: %s", ip, port, e.message);
+      debug("handshaking with peer at %s:%u", ip, port);
+      bool r = daemon.handshake(false); // is "client"
+      if (!r) {
+        message("handshaking failed with peer at %s:%u", ip, port);
         return null;
       }
+
+      message("handshake succeeded with peer at %s:%u", ip, port);
 
       // Enter event loop
       new Thread<int>("daemon", daemon.loop);
@@ -89,13 +90,14 @@ namespace Aaa {
       var daemon = new Daemon(conn, false, this.view);
 
       // Handshake
-      try {
-        debug("handshaking with the peer at %s:%u", remote_ip, remote_port);
-        daemon.handshake(true); // is "server"
-      } catch (Error e) {
-        message("handshaking failed with peer at %s:%u: %s", remote_ip, remote_port, e.message);
+      debug("handshaking with the peer at %s:%u", remote_ip, remote_port);
+      bool r = daemon.handshake(true); // is "server"
+      if (!r) {
+        message("handshaking failed with peer at %s:%u", remote_ip, remote_port);
         return true;
       }
+
+      message("handshake succeeded with peer at %s:%u", remote_ip, remote_port);
 
       // Enter event loop
       // Block, otherwise the socket will be closed

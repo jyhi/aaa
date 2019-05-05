@@ -54,7 +54,7 @@ namespace Aaa {
         message("written %zu bytes", size);
     }
 
-    public void handshake(bool is_server) throws Error {
+    public bool handshake(bool is_server) {
       if (is_server) {
         debug("handshaking with peer in server (positive) mode...");
         // Receive, then send:
@@ -82,6 +82,8 @@ namespace Aaa {
         // - Deserialize message (hello)
         // - Set peer info
       }
+
+      return false;
     }
 
     public void disconnect() {
