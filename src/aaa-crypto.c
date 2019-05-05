@@ -26,10 +26,12 @@ void aaa_user_key_free(struct AaaUserKey *key)
 
 int aaa_keypair_gen(struct AaaUserKey *key)
 {
-  g_debug("generating user keys");
-
-  if (sodium_init() == -1)
+  if (sodium_init() == -1) {
+    g_warning("%s: sodium_init failed", __func__);
     return 0;
+  }
+
+  g_debug("generating user keys");
 
   int r = 0;
 
