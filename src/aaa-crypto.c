@@ -2,6 +2,13 @@
 #include <glib.h>
 #include "aaa-message.h"
 
+void aaa_user_key_free(struct AaaUserKey *key)
+{
+  g_debug("freeing user key");
+
+  // unimpl
+}
+
 int aaa_keypair_gen(struct AaaUserKey *key)
 {
   g_debug("generating user keys");

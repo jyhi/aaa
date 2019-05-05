@@ -23,6 +23,16 @@ struct AaaUserKey {
 };
 
 /**
+ * Securely free AaaUserKey.
+ *
+ * This usually involves several techniques to wipe the memory, but generally
+ * just a wrapper of libsodium's safe memory APIs.
+ *
+ * @param key [in] The AaaUserKey.
+ */
+void aaa_user_key_free(struct AaaUserKey *key);
+
+/**
  * Generate user key, which contains two key pairs, one for signing, and one for
  * encryption.
  *
