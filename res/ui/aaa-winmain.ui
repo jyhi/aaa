@@ -132,8 +132,8 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
             </child>
           </object>
           <packing>
-            <property name="name">page0</property>
-            <property name="title" translatable="yes">page0</property>
+            <property name="name">stackpage_welcome</property>
+            <property name="title" translatable="yes">Welcome</property>
           </packing>
         </child>
         <child>
@@ -443,8 +443,8 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
             </child>
           </object>
           <packing>
-            <property name="name">page1</property>
-            <property name="title" translatable="yes">page1</property>
+            <property name="name">stackpage_chat</property>
+            <property name="title" translatable="yes">Chat</property>
             <property name="position">1</property>
           </packing>
         </child>
