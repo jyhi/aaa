@@ -2,7 +2,6 @@
 #define AAA_CRYPTO_H
 
 #include <stdint.h>
-#include "aaa-message.h"
 
 /**
  * A pair of key (public key and private key).
@@ -44,10 +43,13 @@ int aaa_keypair_gen(struct AaaUserKey *key);
 /**
  * Encrypt an AAA message.
  *
- * @param cipher  [out] Place to hold the cipher text.
- * @param nonce   [out] Place to hold the nonce.
- * @param mac     [out] Place to hold the Poly1305 MAC for authentication.
- * @param message [in]  Plaintext message.
+ * @param cipher        [out] Place to hold the cipher text.
+ * @param cipher_length [out] Place to hold the length of the cipher text.
+ * @param nonce         [out] Place to hold the nonce.
+ * @param nonce_length  [out] Place to hold the length of the nonce.
+ * @param mac           [out] Place to hold the Poly1305 MAC for authentication.
+ * @param mac_length    [out] Place to hold the length of the Poly1305 MAC for authentication.
+ * @param message       [in]  Plaintext message.
  * @return 0 on error, 1 on success.
  */
 int aaa_message_encrypt(uint8_t *cipher,
@@ -56,18 +58,21 @@ int aaa_message_encrypt(uint8_t *cipher,
                         size_t  *nonce_length,
                         uint8_t *mac,
                         size_t  *mac_length,
-                        const struct AaaMessage * const message);
+                        const char * const message);
 
 /**
  * Decrypt an AAA message.
  *
- * @param message [out] Plaintext message.
- * @param cipher  [in]  Cipher text.
- * @param nonce   [in]  Nonce.
- * @param mac     [in]  Poly1305 MAC for authentication.
+ * @param message       [out] Plaintext message.
+ * @param cipher        [in]  Cipher text.
+ * @param cipher_length [out] Length of the cipher text.
+ * @param nonce         [in]  Nonce.
+ * @param nonce_length  [out] Length of the nonce.
+ * @param mac           [in]  Poly1305 MAC for authentication.
+ * @param mac_length    [out] Length of the Poly1305 MAC for authentication.
  * @return 0 on error, 1 on success.
  */
-int aaa_message_decrypt(struct AaaMessage *message,
+int aaa_message_decrypt(char *message,
                         const uint8_t * const cipher,
                         const size_t          cipher_length,
                         const uint8_t * const nonce,

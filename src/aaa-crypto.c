@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include <glib.h>
 #include <sodium.h>
-#include "aaa-message.h"
 #include "aaa-crypto.h"
 
 void aaa_user_key_free(struct AaaUserKey *key)
@@ -117,9 +116,9 @@ int aaa_message_encrypt(uint8_t *cipher,
                         size_t  *nonce_length,
                         uint8_t *mac,
                         size_t  *mac_length,
-                        const struct AaaMessage * const message)
+                        const char * const message)
 {
-  g_debug("encrypting message sending to %s", message->id);
+  g_debug("encrypting message");
 
   // unimpl
 
@@ -127,15 +126,15 @@ int aaa_message_encrypt(uint8_t *cipher,
 }
 
 
-int aaa_message_decrypt(struct AaaMessage *message,
+int aaa_message_decrypt(char *message,
                         const uint8_t * const cipher,
-                        const size_t  * const cipher_length,
+                        const size_t          cipher_length,
                         const uint8_t * const nonce,
-                        const size_t  * const nonce_length,
+                        const size_t          nonce_length,
                         const uint8_t * const mac,
-                        const size_t  * const mac_length)
+                        const size_t          mac_length)
 {
-  g_debug("decrypting message sent from %s", message->id);
+  g_debug("decrypting message");
 
   // unimpl
 
