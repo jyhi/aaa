@@ -24,7 +24,9 @@ namespace Aaa {
 
   public string? message_serialize(Message message);
 
-  public Message message_deserialize(string message_str);
+  // FIXME: Vala compiles a struct returned from a function to an outward
+  // parameter, which does not fit the C function.
+  public Message *message_deserialize(string message_str);
 
   // aaa-crypto
 
@@ -79,16 +81,18 @@ namespace Aaa {
 
   // aaa-packet
 
-  [CCode (cname = "struct AaaPacket", has_type_id = false)]
+  [CCode (cname = "struct AaaPacket", destroy_function = "aaa_packet_free", has_type_id = false)]
   public struct Packet {
-    [CCode (array_length_type = "size_t")] uint8[] message;
-    [CCode (array_length_type = "size_t")] uint8[] nonce;
-    [CCode (array_length_type = "size_t")] uint8[] signature;
+    [CCode (array_length_type = "size_t", array_length_cname = "message_length")] uint8[] message;
+    [CCode (array_length_type = "size_t", array_length_cname = "nonce_length")] uint8[] nonce;
+    [CCode (array_length_type = "size_t", array_length_cname = "signature_length")] uint8[] signature;
   }
 
   public string packet_serialize(Packet packet);
 
-  public Packet packet_deserialize(string packet_str);
+  // FIXME: Vala compiles a struct returned from a function to an outward
+  // parameter, which does not fit the C function.
+  public Packet *packet_deserialize(string packet_str);
 
   // aaa-configmgr
 
