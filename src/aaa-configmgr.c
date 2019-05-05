@@ -45,7 +45,7 @@ void aaa_config_set_cert(const uint8_t * const cert, const size_t cert_length)
     g_debug("configmgr: cert added");
   }
 
-  memcpy(_cert, cert, cert_length);
+  _cert = g_memdup(cert, cert_length);
   _cert_length = cert_length;
 }
 
@@ -65,7 +65,7 @@ void aaa_config_set_key(const uint8_t * const key, const size_t key_length)
     g_debug("configmgr: key added");
   }
 
-  memcpy(_key, key, key_length);
+  _key = g_memdup(key, key_length);
   _key_length = key_length;
 }
 
