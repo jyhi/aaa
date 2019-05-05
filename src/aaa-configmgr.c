@@ -81,7 +81,7 @@ int aaa_config_load(void)
   if (!r) {
     g_warning("configmgr: failed to load config file: %s", err->message);
     g_clear_error(&err);
-    g_clear_object(&conf);
+    g_key_file_free(conf);
     return 0;
   }
 
@@ -113,7 +113,7 @@ int aaa_config_load(void)
   // Deserialize key from Base64
   _key = aaa_base642bin(&_key_length, key);
 
-  g_clear_object(&conf);
+  g_key_file_free(conf);
 
   g_debug("done reading config file %s", AAA_CONFIGMGR_DEFAULT_CONFIG_FILE);
 
@@ -148,7 +148,7 @@ int aaa_config_save(void)
 
   g_debug("rewritten config file at %s", AAA_CONFIGMGR_DEFAULT_CONFIG_FILE);
 
-  g_clear_object(&conf);
+  g_key_file_free(conf);
 
   return 1;
 }
