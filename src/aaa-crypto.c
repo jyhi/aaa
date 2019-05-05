@@ -155,7 +155,7 @@ int aaa_message_encrypt(uint8_t *cipher,
   *nonce_length  = crypto_box_NONCEBYTES;
   *mac_length    = crypto_box_MACBYTES;
 
-  g_debug("%s: encryption succeeded");
+  g_debug("encryption succeeded");
 
   return 1;
 }
