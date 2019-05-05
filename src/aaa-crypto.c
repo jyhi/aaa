@@ -17,19 +17,8 @@ void aaa_user_key_free(struct AaaUserKey *key)
 {
   g_debug("freeing user key pairs");
 
-  if (key->sign->public_key_length > 0)
-    sodium_free(key->sign->public_key);
-  if (key->sign->secret_key_length > 0)
-    sodium_free(key->sign->secret_key);
-
-  sodium_free(key->sign);
-
-  if (key->encrypt->public_key_length > 0)
-    sodium_free(key->encrypt->public_key);
-  if (key->encrypt->secret_key_length > 0)
-    sodium_free(key->encrypt->secret_key);
-
-  sodium_free(key->encrypt);
+  aaa_key_pair_free(key->sign);
+  aaa_key_pair_free(key->encrypt);
 
   sodium_free(key);
 }
