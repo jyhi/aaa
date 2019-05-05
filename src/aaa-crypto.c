@@ -96,7 +96,7 @@ int aaa_keypair_gen(struct AaaUserKey **key)
     return 0;
   }
 
-  r = crypto_sign_ed25519_sk_to_curve25519(ret->encrypt->secret_key, ret->encrypt->secret_key);
+  r = crypto_sign_ed25519_sk_to_curve25519(ret->encrypt->secret_key, ret->sign->secret_key);
   if (r < 0) {
     g_warning("keygen: crypto_sign_ed25519_sk_to_curve25519 returned %d, indicating an error.", r);
     aaa_user_key_free(ret);
