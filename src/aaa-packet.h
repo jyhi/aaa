@@ -32,7 +32,7 @@ void aaa_packet_free(struct AaaPacket *packet);
  * @param packet [in] `struct AaaPacket` to transform.
  * @return String representing the packet in ASCII string. NULL if there is something wrong.
  */
-char *aaa_packet_serialize(const struct AaaPacket packet);
+char *aaa_packet_serialize(const struct AaaPacket * const packet);
 
 /**
  * Transform a valid string representation of AaaPacket into the AaaPacket structure.

@@ -39,20 +39,20 @@ void aaa_packet_free(struct AaaPacket *packet)
     packet->signature_length = 0;
 }
 
-char *aaa_packet_serialize(const struct AaaPacket packet) {
-    size_t packet_length = packet.message_length + packet.nonce_length + packet.signature_length;
+char *aaa_packet_serialize(const struct AaaPacket * const packet) {
+    size_t packet_length = packet->message_length + packet->nonce_length + packet->signature_length;
     char *res = (char *)malloc(sizeof(char) * (packet_length + 7));
     
     // [Header]!
     strcpy(res, "AAA!");
     // [Message];
-    strcat(res, packet.message);
+    strcat(res, packet->message);
     strcat(res, ";");
     // [Nonce],
-    strcat(res, packet.nonce);
+    strcat(res, packet->nonce);
     strcat(res, ",");
     // [Authentication].
-    strcat(res, packet.signature);
+    strcat(res, packet->signature);
     strcat(res, ".");
     
     return res;
