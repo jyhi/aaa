@@ -32,17 +32,17 @@ namespace Aaa {
 
   [CCode (cname = "struct AaaKeyPair", destroy_function = "aaa_key_pair_free", has_type_id = false)]
   public struct KeyPair {
-    [CCode (array_length_type = "size_t")] uint8[] public_key;
-    [CCode (array_length_type = "size_t")] uint8[] secret_key;
+    [CCode (array_length_type = "size_t", array_length_cname = "public_key_length")] uint8[] public_key;
+    [CCode (array_length_type = "size_t", array_length_cname = "secret_key_length")] uint8[] secret_key;
   }
 
   [CCode (cname = "struct AaaUserKey", destroy_function = "aaa_user_key_free", has_type_id = false)]
   public struct UserKey {
-    KeyPair sign;
-    KeyPair encrypt;
+    KeyPair *sign;
+    KeyPair *encrypt;
   }
 
-  public int keypair_gen(out UserKey key);
+  public int keypair_gen(out UserKey *key);
 
   public int message_encrypt(
     [CCode (array_length_type = "size_t")] out uint8[] cipher,
