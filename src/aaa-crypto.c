@@ -1,7 +1,6 @@
 #include <stdint.h>
 #include <glib.h>
 #include <sodium.h>
-#include "aaa-configmgr.h"
 #include "aaa-crypto.h"
 
 void aaa_user_key_free(struct AaaUserKey *key)
@@ -120,7 +119,9 @@ int aaa_message_encrypt(uint8_t *cipher,
                         uint8_t *mac,
                         size_t  *mac_length,
                         const uint8_t * const recipient_pk,
-                        const size_t recipient_pk_length,
+                        const size_t          recipient_pk_length,
+                        const uint8_t * const sender_sk,
+                        const size_t          sender_sk_length,
                         const char * const message)
 {
   if (sodium_init() == -1) {
@@ -138,12 +139,8 @@ int aaa_message_encrypt(uint8_t *cipher,
   // Generate one-time number (nonce) for encryption use
   randombytes_buf(nonce, crypto_box_NONCEBYTES);
 
-  // Get user private key
-  size_t key_size = 0;
-  uint8_t *key = aaa_config_get_key(&key_size);
-
   // Ignite
-  r = crypto_box_detached(cipher, mac, message, message_len, nonce, recipient_pk, key);
+  r = crypto_box_detached(cipher, mac, message, message_len, nonce, recipient_pk, sender_sk);
   if (r < 0) {
     g_warning("%s: crypto_box_detached returned %d, indicating an error.", r);
     return 0;
@@ -162,6 +159,8 @@ int aaa_message_encrypt(uint8_t *cipher,
 int aaa_message_decrypt(char *message,
                         const uint8_t * const sender_pk,
                         const size_t          sender_pk_length,
+                        const uint8_t * const recipient_sk,
+                        const size_t          recipient_sk_length,
                         const uint8_t * const cipher,
                         const size_t          cipher_length,
                         const uint8_t * const nonce,
@@ -181,12 +180,8 @@ int aaa_message_decrypt(char *message,
   // Calculate length of the plaintext message
   size_t message_len = strlen(message);
 
-  // Get user private key
-  size_t key_size = 0;
-  uint8_t *key = aaa_config_get_key(&key_size);
-
   // Nike
-  r = crypto_box_open_detached(message, cipher, mac, cipher_length, nonce, sender_pk, key);
+  r = crypto_box_open_detached(message, cipher, mac, cipher_length, nonce, sender_pk, recipient_sk);
   if (r < 0) {
     g_warning("%s: crypto_box_open_detached returned %d, indicating an error.", r);
     return 0;

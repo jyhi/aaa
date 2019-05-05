@@ -51,6 +51,8 @@ int aaa_keypair_gen(struct AaaUserKey *key);
  * @param mac_length          [out] Place to hold the length of the Poly1305 MAC for authentication.
  * @param recipient_pk        [in]  Public key to the receipent of the message.
  * @param recipient_pk_length [in]  Length of the public key above.
+ * @param sender_sk           [in]  Secret key of the message sender.
+ * @param sender_sk_length    [in]  Length of the secret key above.
  * @param message             [in]  Plaintext message.
  * @return 0 on error, 1 on success.
  */
@@ -61,15 +63,19 @@ int aaa_message_encrypt(uint8_t *cipher,
                         uint8_t *mac,
                         size_t  *mac_length,
                         const uint8_t * const recipient_pk,
-                        const size_t recipient_pk_length,
+                        const size_t          recipient_pk_length,
+                        const uint8_t * const sender_sk,
+                        const size_t          sender_sk_length,
                         const char * const message);
 
 /**
  * Decrypt an AAA message with the user's private key.
  *
  * @param message             [out] Plaintext message.
- * @param recipient_pk        [in]  Public key of the sender of the message.
- * @param recipient_pk_length [in]  Length of the public key above.
+ * @param sender_pk           [in]  Public key of the sender of the message.
+ * @param sender_pk_length    [in]  Length of the public key above.
+ * @param recipient_sk        [in]  Secret key of the message recipient.
+ * @param recipient_sk_length [in]  Length of the secret key above.
  * @param cipher              [in]  Cipher text.
  * @param cipher_length       [in]  Length of the cipher text.
  * @param nonce               [in]  Nonce.
@@ -81,6 +87,8 @@ int aaa_message_encrypt(uint8_t *cipher,
 int aaa_message_decrypt(char *message,
                         const uint8_t * const sender_pk,
                         const size_t          sender_pk_length,
+                        const uint8_t * const recipient_sk,
+                        const size_t          recipient_sk_length,
                         const uint8_t * const cipher,
                         const size_t          cipher_length,
                         const uint8_t * const nonce,
