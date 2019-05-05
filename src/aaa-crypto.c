@@ -170,11 +170,32 @@ int aaa_message_decrypt(char *message,
                         const uint8_t * const mac,
                         const size_t          mac_length)
 {
+  if (sodium_init() == -1) {
+    g_warning("%s: sodium_init failed", __func__);
+    return 0;
+  }
+
   g_debug("decrypting message");
 
-  // unimpl
+  int r = 0;
 
-  return 0;
+  // Calculate length of the plaintext message
+  size_t message_len = strlen(message);
+
+  // Get user private key
+  size_t key_size = 0;
+  uint8_t key = aaa_config_get_key(&key_size);
+
+  // Nike
+  r = crypto_box_open_detached(message, cipher, mac, cipher_length, nonce, sender_pk, key);
+  if (r < 0) {
+    g_warning("%s: crypto_box_open_detached returned %d, indicating an error.", r);
+    return 0;
+  }
+
+  g_debug("decryption succeeded");
+
+  return 1;
 }
 
 char *aaa_bin2base64(const uint8_t * const bin, const size_t bin_length)
