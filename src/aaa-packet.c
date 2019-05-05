@@ -28,6 +28,16 @@ char *str_split(char *str, const char *delim) {
 	return str;
 }
 
+void aaa_packet_free(struct AaaPacket *packet)
+{
+    g_free(packet->message);
+    g_free(packet->nonce);
+    g_free(packet->signature);
+
+    packet->message_length = 0;
+    packet->nonce_length = 0;
+    packet->signature_length = 0;
+}
 
 char *aaa_packet_serialize(const struct AaaPacket packet) {
     size_t packet_length = packet.message_length + packet.nonce_length + packet.signature_length;

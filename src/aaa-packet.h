@@ -20,6 +20,13 @@ struct AaaPacket {
 };
 
 /**
+ * Free an allocated AaaPacket.
+ *
+ * @param packet [in] The packet to free.
+ */
+void aaa_packet_free(struct AaaPacket *packet);
+
+/**
  * Transform an AaaPacket structure into a string.
  *
  * @param packet [in] `struct AaaPacket` to transform.
