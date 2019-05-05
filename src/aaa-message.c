@@ -32,15 +32,30 @@ char *aaa_message_serialize(const struct AaaMessage * const Aaa_msg) {
         case AAA_MESSAGE_TYPE_HELLO:
             strcat(json_msg, "\t\"type\": \"hello\",\n");
             strcat(json_msg, "\t\"id\": \"");
-            strcat(json_msg, Aaa_msg->id);
+            if (Aaa_msg->id)
+            {
+                strcat(json_msg, Aaa_msg->id);
+            } else {
+                return NULL;
+            }
             strcat(json_msg, "\",\n\t\"cert\": \"");
-            strcat(json_msg, Aaa_msg->cert);
+            if (Aaa_msg->cert)
+            {
+                strcat(json_msg, Aaa_msg->cert);
+            } else {
+                return NULL;
+            }
             strcat(json_msg, "\"\n");
             break;
         case AAA_MESSAGE_TYPE_MSG:
             strcat(json_msg, "\t\"type\": \"msg\",\n");
             strcat(json_msg, "\t\"msg\": \"");
-            strcat(json_msg, Aaa_msg->message);
+            if (Aaa_msg->message)
+            {
+                strcat(json_msg, Aaa_msg->message);
+            } else {
+                return NULL;
+            }
             strcat(json_msg, "\"\n");
             break;
         case AAA_MESSAGE_TYPE_BYE:
