@@ -47,7 +47,7 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
       </object>
     </child>
     <child>
-      <object class="GtkStack">
+      <object class="GtkStack" id="stack_welcome">
         <property name="visible">True</property>
         <property name="can_focus">False</property>
         <property name="transition_type">over-left-right</property>

@@ -11,6 +11,8 @@ namespace Aaa {
     [GtkChild]
     private Button btn_welcome_ignite;
     [GtkChild]
+    private Stack stack_welcome;
+    [GtkChild]
     private Label lbl_user_id;
     [GtkChild]
     private ListBox listbox_users;
