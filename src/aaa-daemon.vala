@@ -4,6 +4,7 @@ namespace Aaa {
     private bool close_before_return;
     private ChatUI view;
     private string id;
+    private uint8[] peer_public_key;
 
     public Daemon(SocketConnection conn, bool close_before_return, ChatUI view) {
       this.conn = conn;
@@ -21,6 +22,10 @@ namespace Aaa {
 
     public string get_remote_id() {
       return this.id;
+    }
+
+    public uint8[] get_remote_public_key() {
+      return this.peer_public_key;
     }
 
     public string receive() throws IOError {
