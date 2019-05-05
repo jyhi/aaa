@@ -1,6 +1,7 @@
 #include <stdint.h>
 #include <glib.h>
 #include <sodium.h>
+#include "aaa-configmgr.h"
 #include "aaa-crypto.h"
 
 void aaa_user_key_free(struct AaaUserKey *key)
@@ -124,9 +125,34 @@ int aaa_message_encrypt(uint8_t *cipher,
 {
   g_debug("encrypting message");
 
-  // unimpl
+  int r = 0;
 
-  return 0;
+  // Calculate length of the plaintext message
+  size_t message_len = strlen(message);
+
+  // Generate one-time number (nonce) for encryption use
+  uint8_t *nonce = crypto_box_NONCEBYTES;
+  randombytes_buf(nonce, crypto_box_NONCEBYTES);
+
+  // Get user private key
+  size_t key_size = 0;
+  uint8_t key = aaa_config_get_key(&key_size);
+
+  // Ignite
+  r = crypto_box_detached(cipher, mac, message, message_len, nonce, recipient_pk, key);
+  if (r < 0) {
+    g_warning("%s: crypto_box_detached returned %d, indicating an error.", r);
+    return 0;
+  }
+
+  // Fill lengths
+  *cipher_length = message_len;
+  *nonce_length  = crypto_box_NONCEBYTES;
+  *mac_length    = crypto_box_MACBYTES;
+
+  g_debug("%s: encryption succeeded");
+
+  return 1;
 }
 
 int aaa_message_decrypt(char *message,
