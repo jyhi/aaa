@@ -19,3 +19,21 @@ int aaa_message_decrypt(struct AaaMessage *plain, const struct AaaMessage * cons
 
   return 0;
 }
+
+char *aaa_bin2base64(const uint8_t * const bin, const size_t bin_length)
+{
+  g_debug("transforming binary data to base64...");
+
+  // unimpl
+
+  return NULL;
+}
+
+uint8_t *aaa_base642bin(size_t *bin_size, const char * const base64)
+{
+  g_debug("transforming base64 to binary data...");
+
+  // unimpl
+
+  return NULL;
+}
