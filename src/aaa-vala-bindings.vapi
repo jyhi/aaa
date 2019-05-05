@@ -7,7 +7,7 @@ namespace Aaa {
 
   // aaa-message
 
-  [CCode (has_type_id = false)]
+  [CCode (cname = "enum AaaMessageType", has_type_id = false)]
   public enum MessageType {
     HELLO,
     MSG,
