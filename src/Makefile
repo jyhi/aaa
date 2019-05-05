@@ -25,6 +25,7 @@ OBJS = aaa-addcontact.o \
 	aaa-configmgr.o \
 	aaa-message.o \
 	aaa-crypto.o \
+	aaa-packet.o \
 	app.o \
 	main.o
 
