@@ -1,6 +1,7 @@
 #include <glib.h>
 #include <glib-object.h>
 #include <stdint.h>
+#include "aaa-crypto.h"
 
 #define AAA_CONFIGMGR_DEFAULT_CONFIG_FILE "aaa.conf"
 
@@ -44,8 +45,7 @@ void aaa_config_set_cert(const uint8_t * const cert, const size_t cert_length)
     g_debug("configmgr: cert added");
   }
 
-  // XXX
-  _cert = g_strdup(cert);
+  memcpy(_cert, cert, cert_length);
   _cert_length = cert_length;
 }
 
@@ -65,8 +65,7 @@ void aaa_config_set_key(const uint8_t * const key, const size_t key_length)
     g_debug("configmgr: key added");
   }
 
-  // XXX
-  _key = g_strdup(key);
+  memcpy(_key, key, key_length);
   _key_length = key_length;
 }
 
@@ -100,9 +99,9 @@ int aaa_config_load(void)
     g_warning("configmgr: cert not found in config file: %s", err->message);
     g_clear_error(&err);
   }
-  // XXX
-  _cert = (uint8_t *)cert;
-  _cert_length = strlen(cert);
+
+  // Deserialize certificate from Base64
+  _cert = aaa_base642bin(&_cert_length, cert);
 
   // Load key
   gchar *key = g_key_file_get_string(conf, "AAA", "key", &err);
@@ -110,9 +109,9 @@ int aaa_config_load(void)
     g_warning("configmgr: key not found in config file: %s", err->message);
     g_clear_error(&err);
   }
-  // XXX
-  _key = (uint8_t *)key;
-  _key_length = strlen(key);
+
+  // Deserialize key from Base64
+  _key = aaa_base642bin(&_key_length, key);
 
   g_clear_object(&conf);
 
@@ -130,10 +129,14 @@ int aaa_config_save(void)
 
   GKeyFile *conf = g_key_file_new();
 
-  // Build the config file first
+  // Serialize cert and key first
+  gchar *cert_base64 = aaa_bin2base64(_cert, _cert_length);
+  gchar *key_base64  = aaa_bin2base64(_key, _key_length);
+
+  // Build the config file
   g_key_file_set_string(conf, "AAA", "id", _id);
-  g_key_file_set_string(conf, "AAA", "cert", _cert); // XXX
-  g_key_file_set_string(conf, "AAA", "cert", _key); // XXX
+  g_key_file_set_string(conf, "AAA", "cert", cert_base64);
+  g_key_file_set_string(conf, "AAA", "key", key_base64);
 
   // Rewrite the file
   r = g_key_file_save_to_file(conf, AAA_CONFIGMGR_DEFAULT_CONFIG_FILE, &err);
