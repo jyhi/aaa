@@ -35,6 +35,23 @@ uint8_t *aaa_config_get_cert(size_t *size);
 void aaa_config_set_cert(const uint8_t * const cert, const size_t cert_length);
 
 /**
+ * Get private key of the current user.
+ *
+ * @param  size [out] The size of private key. Must be a valid pointer.
+ * @return key of the user. The caller is responsible to free the
+ *         memory.
+ */
+uint8_t *aaa_config_get_key(size_t *size)
+
+/**
+ * Set user private key.
+ *
+ * @param key        [in] Private key to set.
+ * @param key_length [in] Length of the private key.
+ */
+void aaa_config_set_key(const uint8_t * const key, const size_t key_length)
+
+/**
  * Load configuration from disk to memory.
  *
  * @return 0 for failure, 1 for success. On failure, the configuration file may
