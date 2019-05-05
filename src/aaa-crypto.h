@@ -18,8 +18,8 @@ struct AaaKeyPair {
  * A group of user keys.
  */
 struct AaaUserKey {
-  struct AaaKeyPair sign;    ///< Key pair for signing
-  struct AaaKeyPair encrypt; ///< Key pair for encryption
+  struct AaaKeyPair *sign;    ///< Key pair for signing
+  struct AaaKeyPair *encrypt; ///< Key pair for encryption
 };
 
 /**
