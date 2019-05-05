@@ -115,12 +115,12 @@ mem_fail:
   return 1; // unreachable
 }
 
-int aaa_message_encrypt(uint8_t *cipher,
-                        size_t  *cipher_length,
-                        uint8_t *nonce,
-                        size_t  *nonce_length,
-                        uint8_t *mac,
-                        size_t  *mac_length,
+int aaa_message_encrypt(uint8_t **cipher,
+                        size_t   *cipher_length,
+                        uint8_t **nonce,
+                        size_t   *nonce_length,
+                        uint8_t **mac,
+                        size_t   *mac_length,
                         const uint8_t * const recipient_pk,
                         const size_t          recipient_pk_length,
                         const uint8_t * const sender_sk,
@@ -136,22 +136,34 @@ int aaa_message_encrypt(uint8_t *cipher,
 
   int r = 0;
 
-  // Calculate length of the plaintext message
-  size_t message_len = strlen(message);
+  // Calculate length of the plaintext message (+ 1 NUL)
+  size_t message_len = strlen(message) + 1;
+
+  // Allocate memory for outward parameters
+  // There is no need to use sodium secure memory
+  uint8_t *cipher_buf = g_malloc(message_len);
+  uint8_t *nonce_buf  = g_malloc(crypto_box_NONCEBYTES);
+  uint8_t *mac_buf    = g_malloc(crypto_box_MACBYTES);
 
   // Generate one-time number (nonce) for encryption use
-  randombytes_buf(nonce, crypto_box_NONCEBYTES);
+  randombytes_buf(nonce_buf, crypto_box_NONCEBYTES);
 
   // Ignite
-  r = crypto_box_detached(cipher, mac, message, message_len, nonce, recipient_pk, sender_sk);
+  r = crypto_box_detached(cipher_buf, mac_buf, message, message_len, nonce_buf, recipient_pk, sender_sk);
   if (r < 0) {
     g_warning("%s: crypto_box_detached returned %d, indicating an error.", r);
+    g_free(mac_buf);
+    g_free(nonce_buf);
+    g_free(cipher_buf);
     return 0;
   }
 
-  // Fill lengths
+  // Fill outward parameters
+  *cipher        = cipher_buf;
   *cipher_length = message_len;
+  *nonce         = nonce_buf;
   *nonce_length  = crypto_box_NONCEBYTES;
+  *mac           = mac_buf;
   *mac_length    = crypto_box_MACBYTES;
 
   g_debug("encryption succeeded");
@@ -159,7 +171,7 @@ int aaa_message_encrypt(uint8_t *cipher,
   return 1;
 }
 
-int aaa_message_decrypt(char *message,
+int aaa_message_decrypt(char **message,
                         const uint8_t * const sender_pk,
                         const size_t          sender_pk_length,
                         const uint8_t * const recipient_sk,
@@ -180,15 +192,18 @@ int aaa_message_decrypt(char *message,
 
   int r = 0;
 
-  // Calculate length of the plaintext message
-  size_t message_len = strlen(message);
+  // Allocate memory for output plaintext message
+  char *message_buf = g_malloc(cipher_length);
 
   // Nike
-  r = crypto_box_open_detached(message, cipher, mac, cipher_length, nonce, sender_pk, recipient_sk);
+  r = crypto_box_open_detached(message_buf, cipher, mac, cipher_length, nonce, sender_pk, recipient_sk);
   if (r < 0) {
     g_warning("%s: crypto_box_open_detached returned %d, indicating an error.", r);
     return 0;
   }
+
+  // Fill outward parameter
+  *message = message_buf;
 
   g_debug("decryption succeeded");
 
