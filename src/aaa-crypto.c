@@ -201,13 +201,13 @@ char *aaa_bin2base64(const uint8_t * const bin, const size_t bin_length)
 
   // Calculate size of buffer to store the Base64 string
   // (including trailing NUL)
-  size_t ret_size = sodium_base64_encoded_len(bin_length, sodium_base64_VARIANT_ORIGINAL);
+  size_t ret_size = sodium_base64_encoded_len(bin_length, sodium_base64_VARIANT_ORIGINAL_NO_PADDING);
 
   // Allocate memory
   char *ret = g_malloc(ret_size);
 
   // Perform tranformation
-  return sodium_bin2base64(ret, ret_size, bin, bin_length, sodium_base64_VARIANT_ORIGINAL);
+  return sodium_bin2base64(ret, ret_size, bin, bin_length, sodium_base64_VARIANT_ORIGINAL_NO_PADDING);
 }
 
 uint8_t *aaa_base642bin(size_t *bin_size, const char * const base64)
@@ -225,7 +225,7 @@ uint8_t *aaa_base642bin(size_t *bin_size, const char * const base64)
   size_t ret_size = 0;
 
   // Perform transformation
-  int r = sodium_base642bin(buf, buf_size, base64, buf_size, NULL, &ret_size, NULL, sodium_base64_VARIANT_ORIGINAL);
+  int r = sodium_base642bin(buf, buf_size, base64, buf_size, NULL, &ret_size, NULL, sodium_base64_VARIANT_ORIGINAL_NO_PADDING);
   if (r < 0) {
     // Something happened, but I don't bother to take care of them
     g_warning("%s: failed to parse the Base64 input, maybe corrupted?", __func__);
