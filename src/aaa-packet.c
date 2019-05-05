@@ -38,7 +38,9 @@ void aaa_packet_free(struct AaaPacket *packet)
     packet->nonce_length = 0;
     packet->signature_length = 0;
 }
+
 char *aaa_packet_serialize(const struct AaaPacket * const packet) {
+    if (!packet) return NULL;
     size_t packet_length = packet->message_length + packet->nonce_length + packet->signature_length;
     char *res = (char *)malloc(sizeof(char) * (packet_length + 7));
     
@@ -68,6 +70,7 @@ char *aaa_packet_serialize(const struct AaaPacket * const packet) {
 }
 
 struct AaaPacket *aaa_packet_deserialize(const char * const packet_str) {
+    if (!packet_str) return NULL;
     struct AaaPacket *res = (struct AaaPacket *)malloc(sizeof(struct AaaPacket));
     char *copy_packet_str = (char *)malloc(sizeof(char) * strlen(packet_str));
     strcpy(copy_packet_str, packet_str);
