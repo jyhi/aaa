@@ -210,6 +210,34 @@ int aaa_message_decrypt(char **message,
   return 1;
 }
 
+int aaa_message_sign(uint8_t **signature,
+                     size_t   *signature_length,
+                     const uint8_t * const sender_sk,
+                     const size_t          sender_sk_length,
+                     const uint8_t * const message,
+                     const size_t          message_length)
+{
+  g_debug("signing message...");
+
+  // unimpl
+
+  return 0;
+}
+
+int aaa_message_verify(const uint8_t * const message,
+                       const size_t          message_length,
+                       const uint8_t * const signature,
+                       const size_t          signature_length,
+                       const uint8_t * const sender_pk,
+                       const size_t          sender_pk_length)
+{
+  g_debug("verifying message...");
+
+  // unimpl
+
+  return 0;
+}
+
 char *aaa_bin2base64(const uint8_t * const bin, const size_t bin_length)
 {
   g_debug("transforming binary data to base64...");

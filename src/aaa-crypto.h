@@ -97,6 +97,42 @@ int aaa_message_decrypt(char **message,
                         const size_t          mac_length);
 
 /**
+ * Create a digital signature on a message.
+ *
+ * @param signature        [out] The produced signature.
+ * @param signature_length [out] Size of the produced signature.
+ * @param sender_sk        [in]  The secret key of sender.
+ * @param sender_sk_length [in]  Length of the secret key of sender.
+ * @param message          [in]  The message to sign on.
+ * @param message_length   [in]  Size of the message to sign on.
+ * @return 0 on failure, 1 on success.
+ */
+int aaa_message_sign(uint8_t **signature,
+                     size_t   *signature_length,
+                     const uint8_t * const sender_sk,
+                     const size_t          sender_sk_length,
+                     const uint8_t * const message,
+                     const size_t          message_length);
+
+/**
+ * Verify a digital signature on a message.
+ *
+ * @param message          [in] The message that was signed on.
+ * @param message_length   [in] Size of the message that was signed on.
+ * @param signature        [in] The signature on message.
+ * @param signature_length [in] Size of the signature on message.
+ * @param sender_pk        [in] The public key of sender.
+ * @param sender_pk_length [in] Length of the public key of sender.
+ * @return 0 on failure, 1 on success (e.g. verification failed).
+ */
+int aaa_message_verify(const uint8_t * const message,
+                       const size_t          message_length,
+                       const uint8_t * const signature,
+                       const size_t          signature_length,
+                       const uint8_t * const sender_pk,
+                       const size_t          sender_pk_length);
+
+/**
  * Transform a binary sequence into its Base64 representation.
  *
  * This function is an encapsulation of libsodium.
