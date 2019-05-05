@@ -140,7 +140,7 @@ int aaa_message_encrypt(uint8_t *cipher,
 
   // Get user private key
   size_t key_size = 0;
-  uint8_t key = aaa_config_get_key(&key_size);
+  uint8_t *key = aaa_config_get_key(&key_size);
 
   // Ignite
   r = crypto_box_detached(cipher, mac, message, message_len, nonce, recipient_pk, key);
@@ -183,7 +183,7 @@ int aaa_message_decrypt(char *message,
 
   // Get user private key
   size_t key_size = 0;
-  uint8_t key = aaa_config_get_key(&key_size);
+  uint8_t *key = aaa_config_get_key(&key_size);
 
   // Nike
   r = crypto_box_open_detached(message, cipher, mac, cipher_length, nonce, sender_pk, key);
