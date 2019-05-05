@@ -24,7 +24,7 @@ void aaa_user_key_free(struct AaaUserKey *key)
   sodium_free(key);
 }
 
-int aaa_keypair_gen(struct AaaUserKey *key)
+int aaa_keypair_gen(struct AaaUserKey **key)
 {
   if (sodium_init() == -1) {
     g_warning("%s: sodium_init failed", __func__);
@@ -102,6 +102,9 @@ int aaa_keypair_gen(struct AaaUserKey *key)
     aaa_user_key_free(ret);
     return 0;
   }
+
+  // Give the generated keys back to user
+  *key = ret;
 
   g_debug("keygen: process finished without errors");
 

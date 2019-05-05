@@ -35,10 +35,10 @@ void aaa_user_key_free(struct AaaUserKey *key);
  * Generate user key, which contains two key pairs, one for signing, and one for
  * encryption.
  *
- * @param key [out] The generated key.
+ * @param key [out] Pointer to the generated key.
  * @return 0 for failure, 1 for success. On failure, key is remained untouched.
  */
-int aaa_keypair_gen(struct AaaUserKey *key);
+int aaa_keypair_gen(struct AaaUserKey **key);
 
 /**
  * Encrypt an AAA message with the given recipient's public key.
