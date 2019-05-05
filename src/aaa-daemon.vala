@@ -56,34 +56,155 @@ namespace Aaa {
 
     public bool handshake(bool is_server) {
       if (is_server) {
+
+        // Receive, then send
         debug("handshaking with peer in server (positive) mode...");
-        // Receive, then send:
+
         // - Receive packet
+        string recv;
+        try {
+          recv = this.receive();
+        } catch (IOError e) {
+          warning("handshake failed during receive");
+          return false;
+        }
+
         // - Deserialize packet
-        // - Verify packet (hello)
+        Packet *packet = packet_deserialize(recv);
+
         // - Deserialize message (hello)
-        // - Set peer info
+        Message *message = message_deserialize((string)(*packet).message);
+        if ((*message).type != MessageType.HELLO) {
+          warning("unexpected non-hello packet during handshake");
+          return false;
+        }
+
+        // - Verify packet (hello)
+        // XXX: Since sender public key (certificate) is used during
+        // verification, this stage is moved after message deserialzation (it
+        // should have been before it).
+        uint8[] bin_cert = base642bin((*message).cert);
+        int verified = message_verify(packet.message, packet.signature, bin_cert);
+        if (verified == 0) {
+          warning("failed to verify digital signature");
+          return false;
+        }
+
         // - Get self info
+        string self_id = config_get_id();
+        string b64_self_cert = bin2base64(config_get_cert());
+        uint8[] self_key = config_get_key();
+
         // - Serialize message (hello)
+        string message_tosend = message_serialize(Message() {
+          type = MessageType.HELLO,
+          id   = self_id,
+          cert = b64_self_cert
+        });
+
         // - Sign packet (hello)
+        uint8[] signature;
+        int signed = message_sign(out signature, self_key, message_tosend.data);
+        if (signed == 0) {
+          warning("message signing error");
+          return false;
+        }
+
         // - Serialize packet
+        string packet_tosend = packet_serialize(Packet() {
+          message = message_tosend.data,
+          nonce = null,
+          signature = signature
+        });
+
         // - Send packet
+        try {
+          this.send(packet_tosend);
+        } catch (IOError e) {
+          warning("failed to send peer hello packet: %s", e.message);
+          return false;
+        }
+
+        // Remember peer information
+        this.id = message.id;
+        this.peer_public_key = bin_cert;
+
       } else {
-        debug("handshaking with peer in client (active) mode...");
+
         // Send, then receive
+        debug("handshaking with peer in client (active) mode...");
+
         // - Get self info
+        string self_id = config_get_id();
+        string b64_self_cert = bin2base64(config_get_cert());
+        uint8[] self_key = config_get_key();
+
         // - Serialize message (hello)
+        string message_tosend = message_serialize(Message() {
+          type = MessageType.HELLO,
+          id   = self_id,
+          cert = b64_self_cert
+        });
+
         // - Sign packet (hello)
+        uint8[] signature;
+        int signed = message_sign(out signature, self_key, message_tosend.data);
+        if (signed == 0) {
+          warning("message signing error");
+          return false;
+        }
+
         // - Serialize packet
+        string packet_tosend = packet_serialize(Packet() {
+          message = message_tosend.data,
+          nonce = null,
+          signature = signature
+        });
+
         // - Send packet
+        try {
+          this.send(packet_tosend);
+        } catch (IOError e) {
+          warning("failed to send peer hello packet: %s", e.message);
+          return false;
+        }
+
         // - Receive packet
+        string recv;
+        try {
+          recv = this.receive();
+        } catch (IOError e) {
+          warning("handshake failed during receive");
+          return false;
+        }
+
         // - Deserialize packet
-        // - Verify packet (hello)
+        Packet *packet = packet_deserialize(recv);
+
         // - Deserialize message (hello)
-        // - Set peer info
+        Message *message = message_deserialize((string)(*packet).message);
+        if ((*message).type != MessageType.HELLO) {
+          warning("unexpected non-hello packet during handshake");
+          return false;
+        }
+
+        // - Verify packet (hello)
+        // XXX: Since sender public key (certificate) is used during
+        // verification, this stage is moved after message deserialzation (it
+        // should have been before it).
+        int verified = message_verify(packet.message, packet.signature, (*message).cert.data);
+        if (verified == 0) {
+          warning("failed to verify digital signature");
+          return false;
+        }
+
+        // Remember peer information
+        this.id = (*message).id;
+        this.peer_public_key = base642bin((*message).cert);
       }
 
-      return false;
+      message("handshake succedded, connected with peer %s at %s:%u", this.id, this.get_remote_ip(), this.get_remote_port());
+      return true;
     }
 
     public void disconnect() {
