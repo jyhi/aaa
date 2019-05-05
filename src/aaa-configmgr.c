@@ -8,6 +8,8 @@
 static char    *_id          = NULL;
 static uint8_t *_cert        = NULL;
 static size_t   _cert_length = 0;
+static uint8_t *_key         = NULL;
+static size_t   _key_length  = 0;
 
 char *aaa_config_get_id(void)
 {
@@ -47,6 +49,27 @@ void aaa_config_set_cert(const uint8_t * const cert, const size_t cert_length)
   _cert_length = cert_length;
 }
 
+uint8_t *aaa_config_get_key(size_t *size)
+{
+  *size = _key_length;
+  return g_memdup(_key, _key_length);
+}
+
+void aaa_config_set_key(const uint8_t * const key, const size_t key_length)
+{
+  if (_key || _key_length > 0) {
+    g_debug("configmgr: key replaced");
+    g_free(_key);
+    _key_length = 0;
+  } else {
+    g_debug("configmgr: key added");
+  }
+
+  // XXX
+  _key = g_strdup(key);
+  _key_length = key_length;
+}
+
 int aaa_config_load(void)
 {
   GError  *err = NULL;
@@ -81,6 +104,16 @@ int aaa_config_load(void)
   _cert = (uint8_t *)cert;
   _cert_length = strlen(cert);
 
+  // Load key
+  gchar *key = g_key_file_get_string(conf, "AAA", "key", &err);
+  if (!key) {
+    g_warning("configmgr: key not found in config file: %s", err->message);
+    g_clear_error(&err);
+  }
+  // XXX
+  _key = (uint8_t *)key;
+  _key_length = strlen(key);
+
   g_clear_object(&conf);
 
   g_debug("done reading config file %s", AAA_CONFIGMGR_DEFAULT_CONFIG_FILE);
@@ -100,6 +133,7 @@ int aaa_config_save(void)
   // Build the config file first
   g_key_file_set_string(conf, "AAA", "id", _id);
   g_key_file_set_string(conf, "AAA", "cert", _cert); // XXX
+  g_key_file_set_string(conf, "AAA", "cert", _key); // XXX
 
   // Rewrite the file
   r = g_key_file_save_to_file(conf, AAA_CONFIGMGR_DEFAULT_CONFIG_FILE, &err);
