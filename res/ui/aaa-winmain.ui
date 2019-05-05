@@ -170,7 +170,6 @@ Author: Minyong (Bill) Li <l630003027@mail.uic.edu.hk>
                       <object class="GtkLabel" id="lbl_user_id">
                         <property name="visible">True</property>
                         <property name="can_focus">False</property>
-                        <property name="label" translatable="yes">lmy441900</property>
                       </object>
                       <packing>
                         <property name="expand">False</property>
