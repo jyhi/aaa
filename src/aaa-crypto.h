@@ -43,15 +43,15 @@ int aaa_keypair_gen(struct AaaUserKey *key);
 /**
  * Encrypt an AAA message with the given recipient's public key.
  *
- * @param cipher        [out] Place to hold the cipher text.
- * @param cipher_length [out] Place to hold the length of the cipher text.
- * @param nonce         [out] Place to hold the nonce.
- * @param nonce_length  [out] Place to hold the length of the nonce.
- * @param mac           [out] Place to hold the Poly1305 MAC for authentication.
- * @param mac_length    [out] Place to hold the length of the Poly1305 MAC for authentication.
- * @param recipient_pk  [in]  Public key to the receipent of the message.
- * @param recipient_pk_length [in] Length of the public key above.
- * @param message       [in]  Plaintext message.
+ * @param cipher              [out] Place to hold the cipher text.
+ * @param cipher_length       [out] Place to hold the length of the cipher text.
+ * @param nonce               [out] Place to hold the nonce.
+ * @param nonce_length        [out] Place to hold the length of the nonce.
+ * @param mac                 [out] Place to hold the Poly1305 MAC for authentication.
+ * @param mac_length          [out] Place to hold the length of the Poly1305 MAC for authentication.
+ * @param recipient_pk        [in]  Public key to the receipent of the message.
+ * @param recipient_pk_length [in]  Length of the public key above.
+ * @param message             [in]  Plaintext message.
  * @return 0 on error, 1 on success.
  */
 int aaa_message_encrypt(uint8_t *cipher,
@@ -67,16 +67,20 @@ int aaa_message_encrypt(uint8_t *cipher,
 /**
  * Decrypt an AAA message with the user's private key.
  *
- * @param message       [out] Plaintext message.
- * @param cipher        [in]  Cipher text.
- * @param cipher_length [out] Length of the cipher text.
- * @param nonce         [in]  Nonce.
- * @param nonce_length  [out] Length of the nonce.
- * @param mac           [in]  Poly1305 MAC for authentication.
- * @param mac_length    [out] Length of the Poly1305 MAC for authentication.
+ * @param message             [out] Plaintext message.
+ * @param recipient_pk        [in]  Public key of the sender of the message.
+ * @param recipient_pk_length [in]  Length of the public key above.
+ * @param cipher              [in]  Cipher text.
+ * @param cipher_length       [in]  Length of the cipher text.
+ * @param nonce               [in]  Nonce.
+ * @param nonce_length        [in]  Length of the nonce.
+ * @param mac                 [in]  Poly1305 MAC for authentication.
+ * @param mac_length          [in]  Length of the Poly1305 MAC for authentication.
  * @return 0 on error, 1 on success.
  */
 int aaa_message_decrypt(char *message,
+                        const uint8_t * const sender_pk,
+                        const size_t sender_pk_length,
                         const uint8_t * const cipher,
                         const size_t          cipher_length,
                         const uint8_t * const nonce,
