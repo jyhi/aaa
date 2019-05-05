@@ -26,18 +26,8 @@ namespace Aaa {
   public Message message_deserialize(string message_str);
 
   [CCode]
-  public int message_encrypt(
-    [CCode (array_length_type = "size_t")] out uint8[] cipher,
-    [CCode (array_length_type = "size_t")] out uint8[] nonce,
-    [CCode (array_length_type = "size_t")] out uint8[] mac,
-    Message message
-  );
+  public int message_encrypt(out Message cipher, Message plain);
 
   [CCode]
-  public int message_decrypt(
-    out Message message,
-    [CCode (array_length_type = "size_t")] uint8[] cipher,
-    [CCode (array_length_type = "size_t")] uint8[] nonce,
-    [CCode (array_length_type = "size_t")] uint8[] mac
-  );
+  public int message_decrypt(out Message plain, Message cipher);
 }
