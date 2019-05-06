@@ -324,12 +324,35 @@ namespace Aaa {
 
         debug("new incoming message");
 
-        // unimpl:
         // - Deserialize packet
-        // - Verify packet (msg / bye)
+        Packet *packet = packet_deserialize(incoming);
+
+        // - Decrypt packet
+        string msg;
+        int decrypted = message_decrypt(out msg, this.peer_public_key, config_get_key(), packet->message, packet->nonce, packet->signature);
+        if (decrypted == 0) {
+          warning("failed to decrypt messages");
+          return 0;
+        }
+
         // - Deserialize message (msg / bye)
-        // - Update UI
-        this.view.push_message("alice", "Someone is knocking the door...");
+        Message *message = message_deserialize(msg);
+
+        switch (message->type) {
+          case MessageType.MSG:
+            // - Update UI
+            this.view.push_message(message->id, message->message);
+            break;
+          case MessageType.BYE:
+            // Wave hand
+            this.bye(false);
+            break;
+          case MessageType.HELLO: // fall through
+          default:
+            warning("unexpected non-{msg,bye} packet during chating... terminating the chat.");
+            this.disconnect();
+            break;
+        }
       }
     }
   }
