@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include "aaa-packet.h"
+#include "aaa-crypto.h"
 
 char *str_split(char *str, const char *delim) {
 	static char* left = NULL;
@@ -40,68 +41,70 @@ void aaa_packet_free(struct AaaPacket *packet)
 }
 
 char *aaa_packet_serialize(const struct AaaPacket * const packet) {
-    if (!packet) return NULL;
     size_t packet_length = packet->message_length + packet->nonce_length + packet->signature_length;
     char *res = (char *)malloc(sizeof(char) * (packet_length + 7));
-    
+
     // [Header]!
     strcpy(res, "AAA!");
     // [Message];
     if (packet->message)
     {
-        strcat(res, packet->message);
+        strcat(res, aaa_bin2base64(packet->message, packet->message_length));
     }
     strcat(res, ";");
     // [Nonce],
     if (packet->nonce)
     {
-        strcat(res, packet->nonce);
+        strcat(res, aaa_bin2base64(packet->nonce, packet->nonce_length));
     }
-    
+
     strcat(res, ",");
     // [Authentication].
     if (packet->signature)
     {
-        strcat(res, packet->signature);
+        strcat(res, aaa_bin2base64(packet->signature, packet->signature_length));
     }
     strcat(res, ".");
-    
+
     return res;
 }
 
 struct AaaPacket *aaa_packet_deserialize(const char * const packet_str) {
-    if (!packet_str) return NULL;
     struct AaaPacket *res = (struct AaaPacket *)malloc(sizeof(struct AaaPacket));
     char *copy_packet_str = (char *)malloc(sizeof(char) * strlen(packet_str));
     strcpy(copy_packet_str, packet_str);
     char *token;
-    
+    size_t bin_size = 0;
+
     // Check whether the string starts with "AAA"
     token = str_split(copy_packet_str, "!");
     if (strncmp(token, "AAA", 3) != 0) return NULL;
-    
+
     // Extract message from the packet_str
     token = str_split(NULL, ";");
-    res->message_length = strlen(token);
-    res->message = (uint8_t *)malloc(sizeof(uint8_t) * strlen(token));
-    memcpy(res->message, token, res->message_length);
-    
+    // Transform a Base64 representation into its corresponding binary sequence
+    uint8_t *bin = aaa_base642bin(&bin_size, token);
+    res->message_length = bin_size;
+    res->message = (uint8_t *)malloc(sizeof(uint8_t) * res->message_length);
+    memcpy(res->message, bin, res->message_length);
+
     // Extract nonce from the packet_str
     token = str_split(NULL, ",");
-    res->nonce_length = strlen(token);
-    res->nonce = (uint8_t *)malloc(sizeof(uint8_t) * strlen(token));
-    memcpy(res->nonce, token, res->nonce_length);
-    
+    bin = aaa_base642bin(&bin_size, token);
+    res->nonce_length = bin_size;
+    res->nonce = (uint8_t *)malloc(sizeof(uint8_t) * res->nonce_length);
+    memcpy(res->nonce, bin, res->nonce_length);
+
     // Extract signature from the packet_str
     token = str_split(NULL, ".");
-    res->signature_length = strlen(token);
-    res->signature = (uint8_t *)malloc(sizeof(uint8_t) * strlen(token));
-    memcpy(res->signature, token, res->signature_length);
-    
+    bin = aaa_base642bin(&bin_size, token);
+    res->signature_length = bin_size;
+    res->signature = (uint8_t *)malloc(sizeof(uint8_t) * res->signature_length);
+    memcpy(res->signature, bin, res->signature_length);
+
     free(copy_packet_str);
     return res;
 }
-
 
 // for testing
 // int main() {
