@@ -214,8 +214,100 @@ namespace Aaa {
     public void bye(bool wait_for_bye) throws Error {
       if (wait_for_bye) {
         // Send bye, then wait for a bye
+        // - Serialize message (bye)
+        string message_tosend = message_serialize(Message() {
+          type = MessageType.BYE,
+          id   = this.id
+        });
+
+        // - Encrypt packet
+        uint8[] cipher;
+        uint8[] nonce;
+        uint8[] mac;
+        int r = message_encrypt(out cipher, out nonce, out mac, this.peer_public_key, config_get_key(), message_tosend);
+        if (r == 0) {
+          warning("encryption failed");
+          return;
+        }
+
+        // - Serialize packet
+        string packet_tosend = packet_serialize(Packet() {
+          message = cipher,
+          nonce = nonce,
+          signature = mac
+        });
+
+        // - Send packet
+        try {
+          this.send(packet_tosend);
+        } catch (IOError e) {
+          warning("failed to send peer hello packet: %s", e.message);
+          return;
+        }
+
+        // - Receive packet
+        string recv;
+        try {
+          recv = this.receive();
+        } catch (IOError e) {
+          warning("handshake failed during receive");
+          return;
+        }
+
+        // - Deserialize packet
+        Packet *packet = packet_deserialize(recv);
+
+        // - Decrypt packet (bye)
+        string msg;
+        int decrypted = message_decrypt(out msg, this.peer_public_key, config_get_key(), packet->message, packet->nonce, packet->signature);
+        if (decrypted == 0) {
+          warning("message decryption failed");
+          return;
+        }
+
+        // - Deserialize message (hello)
+        Message *message = message_deserialize(msg);
+        if (message->type != MessageType.BYE) {
+          warning("unexpected non-bye packet during handshake");
+          return;
+        }
+
+        // If bye, we disconnect
+        this.disconnect();
       } else {
         // Send bye
+        // - Serialize message (bye)
+        string message_tosend = message_serialize(Message() {
+          type = MessageType.BYE,
+          id   = this.id
+        });
+
+        // - Encrypt packet
+        uint8[] cipher;
+        uint8[] nonce;
+        uint8[] mac;
+        int r = message_encrypt(out cipher, out nonce, out mac, this.peer_public_key, config_get_key(), message_tosend);
+        if (r == 0) {
+          warning("encryption failed");
+          return;
+        }
+
+        // - Serialize packet
+        string packet_tosend = packet_serialize(Packet() {
+          message = cipher,
+          nonce = nonce,
+          signature = mac
+        });
+
+        // - Send packet
+        try {
+          this.send(packet_tosend);
+        } catch (IOError e) {
+          warning("failed to send peer hello packet: %s", e.message);
+          return;
+        }
+
+        // Then we just return
       }
     }
 
