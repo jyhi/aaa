@@ -11,9 +11,26 @@
 #define MSG 3
 
 static const char *type_prefix                 = "type: ";
-static const char *id_prefix                 = "id: ";
+static const char *id_prefix                   = "id: ";
 static const char *cert_prefix                 = "cert: ";
-static const char *msg_prefix                 = "msg: ";
+static const char *msg_prefix                  = "msg: ";
+
+void aaa_message_free(struct AaaMessage *message) {
+    if (message->id)
+        free(message->id);
+
+    if (message->type == AAA_MESSAGE_TYPE_HELLO) {
+        if (message->cert)
+            free(message->cert);
+    } else if (message->type == AAA_MESSAGE_TYPE_MSG) {
+        if (message->message)
+            free(message->message);
+    } else if (message->type == AAA_MESSAGE_TYPE_BYE) {
+        // nothing to do
+    } else {
+        g_warning("aaa_message_free: unknown type inspected, this is a bug.");
+    }
+}
 
 static char *JSON_extract(const char * const message_str, int infro) {
     char *buffer = g_malloc0(BUFSIZE);
