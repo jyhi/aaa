@@ -70,10 +70,26 @@ static char *JSON_extract(const char * const message_str, int infro) {
     return ret;
 }
 
+size_t compute_msg_size(const struct AaaMessage * const Aaa_msg) {
+    size_t res = 0;
+    res += 50; // for type and other added char
+    if (Aaa_msg->id) {
+        res += strlen(Aaa_msg->id);
+    }
+    if (Aaa_msg->cert) {
+        res += strlen(Aaa_msg->cert);
+    } else if (Aaa_msg->message) {
+        res += strlen(Aaa_msg->message);
+    }
+    return res;
+}
+
 char *aaa_message_serialize(const struct AaaMessage * const Aaa_msg) {
     if (!Aaa_msg) return NULL;
 
-    char *json_msg = (char *)malloc(sizeof(char) * BUFSIZE);
+    size_t msg_size = compute_msg_size(Aaa_msg);
+    char *json_msg = (char *)malloc(sizeof(char) * msg_size);
+    
     strcpy(json_msg, "{\n");
     switch (Aaa_msg->type) {
         case AAA_MESSAGE_TYPE_HELLO:
