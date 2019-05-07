@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 #include <glib.h>
+#include <time.h>
 #include "aaa-message.h"
 
 #define BUFSIZE 2048
@@ -84,6 +85,40 @@ size_t compute_msg_size(const struct AaaMessage * const Aaa_msg) {
     return res;
 }
 
+void write_log(enum AaaMessageType type, char* log) {
+    time_t curtime;
+    struct tm *loc_time;
+    FILE *fptr;
+    fptr = fopen(FILEPATH,"a+");
+
+    if(fptr == NULL)
+    {
+        printf("Error!");
+        exit(1);
+    }
+
+    // Getting current time of system
+    curtime = time (NULL);
+    // Converting current time to local time
+    loc_time = localtime (&curtime);
+    // Writing the local time into log file
+    fprintf(fptr,"%s", asctime (loc_time));
+
+    switch (type) {
+        case AAA_MESSAGE_TYPE_HELLO:
+            fprintf(fptr,"id:%s, ready to connect.\n", log);
+            break;
+        case AAA_MESSAGE_TYPE_MSG:
+            fprintf(fptr,"msg: %s\n", log);
+            break;
+        case AAA_MESSAGE_TYPE_BYE:
+            fprintf(fptr,"%s\n", "Bye: Connection disconnected!");
+            break;
+        default:
+            break;
+    }
+}
+
 char *aaa_message_serialize(const struct AaaMessage * const Aaa_msg) {
     if (!Aaa_msg) return NULL;
 
@@ -142,11 +177,14 @@ struct AaaMessage *aaa_message_deserialize(const char * const message_str) {
         messagePacket->type = AAA_MESSAGE_TYPE_HELLO;
         messagePacket->id = JSON_extract(message_str, ID);
         messagePacket->cert = JSON_extract(message_str, CERT);
+        write_log(AAA_MESSAGE_TYPE_HELLO, messagePacket->id);
     } else if (strncmp(type, "msg", 3) == 0) {
         messagePacket->type = AAA_MESSAGE_TYPE_MSG;
         messagePacket->message = JSON_extract(message_str, MSG);
+        write_log(AAA_MESSAGE_TYPE_MSG, messagePacket->message);
     } else if (strncmp(type, "bye", 3) == 0) {
         messagePacket->type = AAA_MESSAGE_TYPE_BYE;
+        write_log(AAA_MESSAGE_TYPE_BYE, NULL);
     } else {
         return NULL;
     }
