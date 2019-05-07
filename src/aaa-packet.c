@@ -24,6 +24,7 @@ char *str_split(char *str, const char *delim) {
 		if(flag)
 		{
 			left = s; // record the rest of string
+			strcat(str, "\0");
 			return str;
 		}
 	}
