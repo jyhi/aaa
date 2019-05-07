@@ -10,6 +10,8 @@
 #define ID 1
 #define CERT 2
 #define MSG 3
+// Change the file path when you implement it!
+#define FILEPATH "/Users/zhangyuan/desktop/test.txt"
 
 static const char *type_prefix                 = "type: ";
 static const char *id_prefix                   = "id: ";
