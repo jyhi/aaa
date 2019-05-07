@@ -9,7 +9,7 @@
 char *str_split(char *str, const char *delim) {
 	static char* left = NULL;
 	if(str == NULL) str = left;
-	
+
 	bool flag;
 	char *s = str;
 	while(*s != 0)
@@ -63,7 +63,7 @@ char *aaa_packet_serialize(const struct AaaPacket * const packet) {
         rub3_size = strlen(rub3);
     }
 
-    char *res = (char *)malloc(sizeof(char) * (rub1_size + rub2_size + rub3_size + 7));
+    char *res = (char *)malloc(sizeof(char) * (rub1_size + rub2_size + rub3_size + 8));
 
     // [Header]!
     strcpy(res, "AAA!");
@@ -88,7 +88,7 @@ char *aaa_packet_serialize(const struct AaaPacket * const packet) {
         free(rub3);
     }
     strcat(res, ".");
-    
+
     return res;
 }
 

@@ -7,7 +7,7 @@ namespace Aaa {
     private uint8[] peer_public_key;
 
     public Daemon(SocketConnection conn, bool close_before_return, ChatUI view) {
-      this.conn = conn;
+      this.conn = conn.ref() as SocketConnection;
       this.close_before_return = close_before_return;
       this.view = view;
     }
@@ -34,6 +34,10 @@ namespace Aaa {
       debug("receiving bytes from remote...");
 
       size_t size = this.conn.get_input_stream().read(buffer);
+
+      if (size == 0) {
+        throw new IOError.INVALID_DATA("zero-sized buffer received");
+      }
 
       message("read %zu bytes", size);
 
@@ -192,7 +196,8 @@ namespace Aaa {
         // XXX: Since sender public key (certificate) is used during
         // verification, this stage is moved after message deserialzation (it
         // should have been before it).
-        int verified = message_verify(packet.message, packet.signature, (*message).cert.data);
+        uint8[] bin_cert = base642bin(message->cert);
+        int verified = message_verify(packet.message, packet.signature, bin_cert);
         if (verified == 0) {
           warning("failed to verify digital signature");
           return false;
@@ -200,18 +205,67 @@ namespace Aaa {
 
         // Remember peer information
         this.id = (*message).id;
-        this.peer_public_key = base642bin((*message).cert);
+        this.peer_public_key = bin_cert;
       }
 
       message("handshake succedded, connected with peer %s at %s:%u", this.id, this.get_remote_ip(), this.get_remote_port());
+
+      // Add a contact row to UI
+      Idle.add(() => {
+        this.view.push_user(this.id, this.get_remote_ip());
+        return Source.REMOVE;
+      });
+
       return true;
     }
 
+    public void sendmsg(string msg) {
+      // - Serialize message (msg)
+      string message_tosend = message_serialize(Message() {
+        type    = MessageType.MSG,
+        id      = this.id,
+        message = msg
+      });
+
+      // - Encrypt packet
+      uint8[] cipher;
+      uint8[] nonce;
+      uint8[] mac;
+      int r = message_encrypt(out cipher, out nonce, out mac, this.peer_public_key, config_get_key(), message_tosend);
+      if (r == 0) {
+        warning("encryption failed");
+        return;
+      }
+
+      // - Serialize packet
+      string packet_tosend = packet_serialize(Packet() {
+        message = cipher,
+        nonce = nonce,
+        signature = mac
+      });
+
+      // - Send packet
+      try {
+        this.send(packet_tosend);
+      } catch (IOError e) {
+        warning("failed to send peer msg packet: %s", e.message);
+        Idle.add(() => {
+          this.view.remove_user(this.id, this.get_remote_ip());
+          return Source.REMOVE;
+        });
+        return;
+      }
+    }
+
     public void disconnect() {
+      Idle.add(() => {
+        this.view.remove_user(this.id, this.get_remote_ip());
+        return Source.REMOVE;
+      });
       this.conn.close();
     }
 
-    public void bye(bool wait_for_bye) throws Error {
+    public void bye(bool wait_for_bye) throws IOError {
       if (wait_for_bye) {
         // Send bye, then wait for a bye
         // - Serialize message (bye)
@@ -226,8 +280,7 @@ namespace Aaa {
         uint8[] mac;
         int r = message_encrypt(out cipher, out nonce, out mac, this.peer_public_key, config_get_key(), message_tosend);
         if (r == 0) {
-          warning("encryption failed");
-          return;
+          throw new IOError.INVALID_DATA("encryption failed");
         }
 
         // - Serialize packet
@@ -238,21 +291,10 @@ namespace Aaa {
         });
 
         // - Send packet
-        try {
-          this.send(packet_tosend);
-        } catch (IOError e) {
-          warning("failed to send peer hello packet: %s", e.message);
-          return;
-        }
+        this.send(packet_tosend);
 
         // - Receive packet
-        string recv;
-        try {
-          recv = this.receive();
-        } catch (IOError e) {
-          warning("handshake failed during receive");
-          return;
-        }
+        string recv = this.receive();
 
         // - Deserialize packet
         Packet *packet = packet_deserialize(recv);
@@ -261,15 +303,13 @@ namespace Aaa {
         string msg;
         int decrypted = message_decrypt(out msg, this.peer_public_key, config_get_key(), packet->message, packet->nonce, packet->signature);
         if (decrypted == 0) {
-          warning("message decryption failed");
-          return;
+          throw new IOError.INVALID_DATA("message decryption failed");
         }
 
         // - Deserialize message (hello)
         Message *message = message_deserialize(msg);
         if (message->type != MessageType.BYE) {
-          warning("unexpected non-bye packet during handshake");
-          return;
+          throw new IOError.INVALID_DATA("unexpected non-bye packet during handshake");
         }
 
         // If bye, we disconnect
@@ -288,8 +328,7 @@ namespace Aaa {
         uint8[] mac;
         int r = message_encrypt(out cipher, out nonce, out mac, this.peer_public_key, config_get_key(), message_tosend);
         if (r == 0) {
-          warning("encryption failed");
-          return;
+          throw new IOError.INVALID_DATA("encryption failed");
         }
 
         // - Serialize packet
@@ -300,12 +339,13 @@ namespace Aaa {
         });
 
         // - Send packet
-        try {
-          this.send(packet_tosend);
-        } catch (IOError e) {
-          warning("failed to send peer hello packet: %s", e.message);
-          return;
-        }
+        this.send(packet_tosend);
+
+        // Remove the peer from UI
+        Idle.add(() => {
+          this.view.remove_user(this.id, this.get_remote_ip());
+          return Source.REMOVE;
+        });
 
         // Then we just return
       }
@@ -319,6 +359,14 @@ namespace Aaa {
           incoming = this.receive(); // Blocks
         } catch (IOError e) {
           warning("error during receive: %s", e.message);
+          if (this.close_before_return)
+            this.disconnect();
+          else
+            Idle.add(() => {
+              this.view.remove_user(this.id, this.get_remote_ip());
+              return Source.REMOVE;
+            });
+
           return 0;
         }
 
@@ -331,7 +379,14 @@ namespace Aaa {
         string msg;
         int decrypted = message_decrypt(out msg, this.peer_public_key, config_get_key(), packet->message, packet->nonce, packet->signature);
         if (decrypted == 0) {
-          warning("failed to decrypt messages");
+          warning("failed to decrypt messages, terminating current chat");
+          if (this.close_before_return)
+            this.disconnect();
+          else
+            Idle.add(() => {
+              this.view.remove_user(this.id, this.get_remote_ip());
+              return Source.REMOVE;
+            });
           return 0;
         }
 
@@ -341,7 +396,10 @@ namespace Aaa {
         switch (message->type) {
           case MessageType.MSG:
             // - Update UI
-            this.view.push_message(message->id, message->message);
+            Idle.add(() => {
+              this.view.push_message(message->id, message->message);
+              return Source.REMOVE;
+            });
             break;
           case MessageType.BYE:
             // Wave hand
@@ -350,7 +408,13 @@ namespace Aaa {
           case MessageType.HELLO: // fall through
           default:
             warning("unexpected non-{msg,bye} packet during chating... terminating the chat.");
-            this.disconnect();
+            if (this.close_before_return)
+              this.disconnect();
+            else
+              Idle.add(() => {
+                this.view.remove_user(this.id, this.get_remote_ip());
+                return Source.REMOVE;
+              });
             break;
         }
       }

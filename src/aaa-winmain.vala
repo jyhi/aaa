@@ -55,6 +55,26 @@ namespace Aaa {
       this.box_messages.add(new MsgRow(id, msg));
     }
 
+    public void push_user(string id, string ip) {
+      this.listbox_users.add(
+        new ContactRow(
+          ContactStatus.ONLINE,
+          id,
+          ip
+        )
+      );
+    }
+
+    public void remove_user(string? id, string? ip) {
+      this.listbox_users.foreach((row) => {
+        if (((row as ListBoxRow).get_child() as ContactRow).get_id() == id ||
+            ((row as ListBoxRow).get_child() as ContactRow).get_addr() == ip) {
+          (row as ListBoxRow).destroy();
+          this.peers.unset(ip);
+        }
+      });
+    }
+
     [GtkCallback]
     private void btn_welcome_ignite_clicked_cb() {
       // Create user key
@@ -105,17 +125,8 @@ namespace Aaa {
           var remote_id = daemon.get_remote_id();
           var remote_ip = daemon.get_remote_ip();
 
-          // Add a contact row
-          this.listbox_users.add(
-            new ContactRow(
-              ContactStatus.ONLINE,
-              remote_id,
-              remote_ip
-            )
-          );
-
-          // Add to hash map for future use
-          this.peers.set(remote_id, daemon);
+          // Contact row is added by daemon
+          this.peers.set(remote_id, (daemon.ref() as Daemon));
 
           break;
         case ResponseType.CANCEL: // fall through
@@ -145,8 +156,7 @@ namespace Aaa {
           }
         }
 
-        // Remove the selected row
-        selected_row.destroy();
+        // Contact row is removed by daemon
 
         message("connection to %s (%s) closed", remote_id, remote_ip);
       }
@@ -181,6 +191,10 @@ namespace Aaa {
       // Clear the text view
       buffer.delete(ref start, ref end);
 
+      // Don't send blank content
+      if (text.length == 0)
+        return;
+
       // Show message of current user on the window
       this.box_messages.add(new MsgRow("You", text));
 
@@ -189,7 +203,7 @@ namespace Aaa {
 
       // Send message
       var daemon = this.peers.get(remote_id);
-      daemon.send(text);
+      daemon.sendmsg(text);
     }
   }
 }

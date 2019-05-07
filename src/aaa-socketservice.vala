@@ -101,7 +101,7 @@ namespace Aaa {
 
       // Enter event loop
       // Block, otherwise the socket will be closed
-      new Thread<int>("daemon", daemon.loop).join();
+      new Thread<int>("daemon", (daemon.ref() as Daemon).loop).join();
 
       message("closing connection");
       return true;

@@ -150,7 +150,7 @@ int aaa_message_encrypt(uint8_t **cipher,
   // Ignite
   r = crypto_box_detached(cipher_buf, mac_buf, message, message_len, nonce_buf, recipient_pk, sender_sk);
   if (r < 0) {
-    g_warning("%s: crypto_box_detached returned %d, indicating an error.", r);
+    g_warning("%s: crypto_box_detached returned %d, indicating an error.", __func__, r);
     g_free(mac_buf);
     g_free(nonce_buf);
     g_free(cipher_buf);
@@ -197,7 +197,7 @@ int aaa_message_decrypt(char **message,
   // Nike
   r = crypto_box_open_detached(message_buf, cipher, mac, cipher_length, nonce, sender_pk, recipient_sk);
   if (r < 0) {
-    g_warning("%s: crypto_box_open_detached returned %d, indicating an error.", r);
+    g_warning("%s: crypto_box_open_detached returned %d, indicating an error.", __func__, r);
     return 0;
   }
 
@@ -290,7 +290,7 @@ uint8_t *aaa_base642bin(size_t *bin_size, const char * const base64)
   size_t buf_size = strlen(base64);
 
   // Allocate memory
-  char *buf = g_malloc(buf_size);
+  uint8_t *buf = g_malloc(buf_size);
 
   // The actual binary size to receive from libsodium
   size_t ret_size = 0;
@@ -303,8 +303,11 @@ uint8_t *aaa_base642bin(size_t *bin_size, const char * const base64)
     return NULL;
   }
 
+  // Truncate the string at the correct position (?)
+  // buf[ret_size] = 0;
+
   // Transformation succeedded, shrink the memory
-  char *ret = g_memdup(buf, ret_size);
+  uint8_t *ret = g_memdup(buf, ret_size);
 
   // Fill size of the returned buffer
   *bin_size = ret_size;
