@@ -50,18 +50,20 @@ namespace Aaa {
       // Socket will be closed by the daemon
       var daemon = new Daemon(conn, true, this.view);
 
-      // Handshake
-      debug("handshaking with peer at %s:%u", ip, port);
-      bool r = daemon.handshake(false); // is "client"
-      if (!r) {
-        message("handshaking failed with peer at %s:%u", ip, port);
-        return null;
-      }
-
-      message("handshake succeeded with peer at %s:%u", ip, port);
-
       // Enter event loop
-      new Thread<int>("daemon", daemon.loop);
+      new Thread<int>("daemon", () => {
+              // Handshake with server
+              debug("handshaking");
+              //debug("handshaking with peer at %s:%u", ip, port);
+              bool r = daemon.handshake(false); // is "client"
+              if (!r) {
+                  message("handshaking failed");
+                  return 0;
+              }
+              message("handshake succeeded");
+
+              return daemon.loop();
+          });
 
       return daemon;
     }
